@@ -24,6 +24,8 @@
 		A3DF55442AF12F3400909E3C /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DF55432AF12F3400909E3C /* RegisterView.swift */; };
 		A3DF55482AF1386500909E3C /* DBConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DF55472AF1386500909E3C /* DBConnection.swift */; };
 		A3DF554B2AF164C000909E3C /* BooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DF554A2AF164C000909E3C /* BooksView.swift */; };
+		A3DF554D2AF17A5500909E3C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DF554C2AF17A5500909E3C /* ProfileView.swift */; };
+		A3DF554F2AF17AA800909E3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DF554E2AF17AA800909E3C /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		A3DF55432AF12F3400909E3C /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		A3DF55472AF1386500909E3C /* DBConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBConnection.swift; sourceTree = "<group>"; };
 		A3DF554A2AF164C000909E3C /* BooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksView.swift; sourceTree = "<group>"; };
+		A3DF554C2AF17A5500909E3C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		A3DF554E2AF17AA800909E3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,8 +82,8 @@
 		A3DF551A2AF129FD00909E3C /* LitLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				A3DF55502AF17B0C00909E3C /* Model */,
 				A3DF55492AF1649900909E3C /* Views */,
-				A3DF55292AF12A2500909E3C /* Components */,
 				A3DF551B2AF129FD00909E3C /* LitLibraryApp.swift */,
 				A3DF551D2AF129FD00909E3C /* ContentView.swift */,
 				A3DF552C2AF12AC900909E3C /* GoogleService-Info.plist */,
@@ -98,13 +102,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		A3DF55292AF12A2500909E3C /* Components */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
 		A3DF55392AF12B4000909E3C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +114,7 @@
 			children = (
 				A3DF55412AF12E5C00909E3C /* LoginView.swift */,
 				A3DF55432AF12F3400909E3C /* RegisterView.swift */,
+				A3DF554E2AF17AA800909E3C /* SettingsView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -126,8 +124,16 @@
 			children = (
 				A3DF55402AF12E4800909E3C /* Authentication */,
 				A3DF554A2AF164C000909E3C /* BooksView.swift */,
+				A3DF554C2AF17A5500909E3C /* ProfileView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A3DF55502AF17B0C00909E3C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,10 +221,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3DF551E2AF129FD00909E3C /* ContentView.swift in Sources */,
+				A3DF554F2AF17AA800909E3C /* SettingsView.swift in Sources */,
 				A3DF554B2AF164C000909E3C /* BooksView.swift in Sources */,
 				A3DF55442AF12F3400909E3C /* RegisterView.swift in Sources */,
 				A3DF55422AF12E5C00909E3C /* LoginView.swift in Sources */,
 				A3DF551C2AF129FD00909E3C /* LitLibraryApp.swift in Sources */,
+				A3DF554D2AF17A5500909E3C /* ProfileView.swift in Sources */,
 				A3DF55482AF1386500909E3C /* DBConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

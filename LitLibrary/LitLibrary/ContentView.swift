@@ -15,7 +15,7 @@ struct ContentView: View {
         
         if let user = dbConnection.currentUser{
            NavigationStack{
-               BooksView(db: dbConnection)
+               ProfileView(db: dbConnection)
             }
         } else {
             NavigationStack{

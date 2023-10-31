@@ -69,7 +69,14 @@ struct LoginView: View {
                                 Spacer()
                                 
                                 Button(action: {
-                                   
+                                    if !email.isEmpty {
+                                        
+                                        let isSuccess = db.resetPassword(email: email)
+                                           
+                                           if !isSuccess {
+                                               print("Failed to reset password!")
+                                           }
+                                    }
                                 }, label: {
                                     Text("Forget password")
                                         .bold()
@@ -82,6 +89,11 @@ struct LoginView: View {
                                 
                                 if !email.isEmpty && !password.isEmpty {
                                     
+                                    let isSuccess = db.LoginUser(email: email, password: password)
+                                       
+                                       if !isSuccess {
+                                           print("Failed to logging in!")
+                                       }
                                     
                                 }
                             }, label: {

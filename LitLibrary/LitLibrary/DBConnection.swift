@@ -90,6 +90,44 @@ class DBConnection: ObservableObject {
 
         return success
     }
+    
+    func deleteAccount() -> Bool {
+            var success = false
+            
+            if let user = auth.currentUser {
+                user.delete { error in
+                    if let error = error {
+                        print("Error deleting account: \(error.localizedDescription)")
+                        success = false
+                    } else {
+                        self.currentUser = nil
+                        print("Account deleted successfully")
+                        success = true
+                    }
+                }
+            } else {
+                print("No user is currently logged in.")
+                success = false
+            }
+            
+            return success
+        }
+        
+        func resetPassword(email: String) -> Bool {
+            var success = false
+            
+            auth.sendPasswordReset(withEmail: email) { error in
+                if let error = error {
+                    print("Error sending password reset email: \(error.localizedDescription)")
+                    success = false
+                } else {
+                    print("Password reset email sent successfully")
+                    success = true
+                }
+            }
+            
+            return success
+        }
 
 
 }

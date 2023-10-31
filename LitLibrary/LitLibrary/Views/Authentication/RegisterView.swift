@@ -6,10 +6,14 @@
 //
 
 
-import Foundation
+
 import SwiftUI
 
+
 struct RegisterView:View {
+    
+    @ObservedObject var db: DBConnection
+    
     
     @State var color = Color.black.opacity(0.7)
     @State var email = ""
@@ -37,13 +41,13 @@ struct RegisterView:View {
                             .foregroundColor( Color.black.opacity(0.7))
                             .padding()
                         
-                        TextField("Name", text: self.$name)
+                        TextField("Name", text:$name)
                             .textInputAutocapitalization(.none)
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 4).stroke(self.name != "" ? Color.indigo : self.color, lineWidth: 2))
                             .padding(.top, 10)
                         
-                        TextField("Email", text: self.$email)
+                        TextField("Email", text: $email)
                             .textInputAutocapitalization(.none)
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
@@ -53,10 +57,10 @@ struct RegisterView:View {
                             VStack{
                                 
                                 if self.visible{
-                                    TextField("Password", text: self.$password)
+                                    TextField("Password", text: $password)
                                         .textInputAutocapitalization(.none)
                                 }else{
-                                    SecureField("Password", text: self.$password)
+                                    SecureField("Password", text: $password)
                                         .textInputAutocapitalization(.none)
                                 }
                             }
@@ -77,10 +81,10 @@ struct RegisterView:View {
                                 
                                 VStack{
                                     if self.revisible{
-                                        TextField("Confirm password", text: self.$confirmPassword)
+                                        TextField("Confirm password", text: $confirmPassword)
                                             .textInputAutocapitalization(.none)
                                     }else{
-                                        SecureField("Confirm password", text:  self.$confirmPassword)
+                                        SecureField("Confirm password", text:  $confirmPassword)
                                             .textInputAutocapitalization(.none)
                                     }
                                 }
@@ -114,7 +118,17 @@ struct RegisterView:View {
                         .padding(.top, 10)
               
                         Button(action: {
-                         
+                            if !email.isEmpty && !password.isEmpty && password == confirmPassword {
+                                
+                             let isSuccess = db.RegisterUser(name: name,
+                                                email: email,
+                                                password: password,
+                                                confirmPassword: confirmPassword)
+                                
+                                if !isSuccess {
+                                    print("Failed to create account!")
+                                }
+                            }
                         }, label: {
                             Text("Register")
                                 .foregroundColor(.white)
@@ -130,7 +144,7 @@ struct RegisterView:View {
                     .padding(.horizontal, 25)
                 }
                 
-                NavigationLink(destination: LoginView().navigationBarBackButtonHidden(true), label: {
+                NavigationLink(destination: LoginView(db: DBConnection()).navigationBarBackButtonHidden(true), label: {
                     HStack{
                         Text("Already have an account?")
                             .foregroundColor(.gray)
@@ -159,5 +173,5 @@ struct RegisterView:View {
 //}
 
 #Preview {
-    RegisterView()
+    RegisterView(db: DBConnection())
 }

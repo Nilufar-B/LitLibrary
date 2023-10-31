@@ -5,24 +5,21 @@
 //  Created by Nilufar Bakhridinova on 2023-10-31.
 //
 
-import Foundation
+
 import SwiftUI
 
 struct LoginView: View {
     
+    @ObservedObject var db: DBConnection
+    
        @State var color = Color.black.opacity(0.7)
        @State var email = ""
        @State var password = ""
-    
-    
        @State var visible = false
        @State var alert = false
        @State var error = ""
-    
-
-    
+      
     var body: some View {
-        
         ZStack{
             
             ZStack(alignment: .topTrailing){
@@ -39,7 +36,7 @@ struct LoginView: View {
                                 .foregroundColor( Color.black.opacity(0.7))
                                 .padding(.top, 35)
                             
-                            TextField("Email", text: self.$email)
+                            TextField("Email", text: $email)
                                 .textInputAutocapitalization(.none)
                                 .padding()
                                 .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
@@ -49,10 +46,10 @@ struct LoginView: View {
                                 VStack{
                                     
                                     if self.visible{
-                                        TextField("Password", text: self.$password)
+                                        TextField("Password", text: $password)
                                             .textInputAutocapitalization(.none)
                                     }else{
-                                        SecureField("Password", text: self.$password)
+                                        SecureField("Password", text: $password)
                                             .textInputAutocapitalization(.none)
                                     }
                                 }
@@ -83,6 +80,10 @@ struct LoginView: View {
                             
                             Button(action: {
                                 
+                                if !email.isEmpty && !password.isEmpty {
+                                    
+                                    
+                                }
                             }, label: {
                                 Text("Log in")
                                     .foregroundColor(.white)
@@ -97,7 +98,8 @@ struct LoginView: View {
                         }
                         .padding(.horizontal, 25)
                     }
-                NavigationLink(destination: RegisterView().navigationBarBackButtonHidden(true), label: {
+                NavigationLink(destination: RegisterView(db: DBConnection())
+                    .navigationBarBackButtonHidden(true), label: {
                         Text("Register")
                             .bold()
                             .foregroundColor(.gray)
@@ -111,5 +113,6 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView(db: DBConnection())
 }
+

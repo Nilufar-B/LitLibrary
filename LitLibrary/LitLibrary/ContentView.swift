@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+  @StateObject var dbConnection = DBConnection()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        if let user = dbConnection.currentUser{
+           NavigationStack{
+               BooksView(db: dbConnection)
+            }
+        } else {
+            NavigationStack{
+                LoginView(db: dbConnection)
+            }
         }
-        .padding()
     }
 }
 

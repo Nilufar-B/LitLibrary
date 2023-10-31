@@ -20,10 +20,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct LitLibraryApp: App {
+    
+    //@StateObject var authViewModel = AuthViewModel()
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+               ContentView()
+            }
         }
     }
 }

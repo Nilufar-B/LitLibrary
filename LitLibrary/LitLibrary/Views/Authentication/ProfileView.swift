@@ -11,6 +11,7 @@ import SwiftUI
 struct ProfileView: View {
     
     @ObservedObject var db: DBConnection
+ 
     
     @State var email = ""
     @State var password = ""

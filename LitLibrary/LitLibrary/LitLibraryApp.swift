@@ -28,7 +28,7 @@ struct LitLibraryApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-               ContentView()
+               BooksView(db: DBConnection(), booksApi: BooksAPI())
             }
         }
     }

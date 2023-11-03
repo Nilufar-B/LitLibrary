@@ -22,8 +22,8 @@ struct RegisterView:View {
     @State var confirmPassword = ""
     @State var visible = false
     @State var revisible = false
-//    @State var alert = false
-//    @State var error = ""
+
+    @State private var registrationSuccess = false
     
     var body: some View {
         ZStack{
@@ -144,7 +144,7 @@ struct RegisterView:View {
                     .padding(.horizontal, 25)
                 }
                 
-                NavigationLink(destination: LoginView(db: DBConnection()).navigationBarBackButtonHidden(true), label: {
+                NavigationLink(destination: LoginView(db: db).navigationBarBackButtonHidden(true), label: {
                     HStack{
                         Text("Already have an account?")
                             .foregroundColor(.gray)

@@ -16,7 +16,7 @@ struct SearchBar: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
             
-            TextField("Search books", text: $searchText)
+            TextField("Search books...", text: $searchText)
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
             
@@ -33,12 +33,9 @@ struct SearchBar: View {
     }
 }
 
-struct SearchBar_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            SearchBar(searchText: .constant("Search a book"))
-                .frame(width: 300, height: 50)
-        }
-    }
+#Preview {
+    SearchBar(searchText: .constant("Search a book"))
 }
+
+
 

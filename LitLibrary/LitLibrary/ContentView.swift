@@ -14,16 +14,38 @@ struct ContentView: View {
     
     var body: some View {
         
-        if let user = dbConnection.currentUser{
-           NavigationStack{
-               ProfileView(db: dbConnection)
-            }
-        } else {
-            NavigationStack{
-                LoginView(db: dbConnection)
-            }
-        }
+                if let _ = dbConnection.currentUser{
+                    
+        NavigationStack{
+           TabView {
+                    BooksView(db: dbConnection, booksApi: booksAPI)
+                        .tabItem {
+                            Image(systemName: "house")
+                                .renderingMode(.template)
+                        }
+                    FavoritesView()
+                        .tabItem {
+                            Image(systemName: "heart")
+                                .renderingMode(.template)
+                        }
+                    ProfileView(db: dbConnection)
+                        .tabItem {
+                            Image(systemName: "person")
+                                .renderingMode(.template)
+                        }
+                    }
+           .accentColor(.orange)
+                  
+                    }
+                } else {
+                    NavigationStack{
+                        LoginView(db: dbConnection)
+                    }
+                }
+        
+   
     }
+    
 }
 
 #Preview {

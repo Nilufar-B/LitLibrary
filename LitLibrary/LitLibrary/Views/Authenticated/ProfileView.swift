@@ -17,7 +17,7 @@ struct ProfileView: View {
     @State var password = ""
     
     var body: some View {
-        if let user = db.currentUser {
+        if let _ = db.currentUser {
             List{
                 Section{
                     HStack {

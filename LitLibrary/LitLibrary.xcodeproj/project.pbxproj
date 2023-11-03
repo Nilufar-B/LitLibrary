@@ -103,7 +103,6 @@
 				A3DF552C2AF12AC900909E3C /* GoogleService-Info.plist */,
 				A3DF551F2AF129FF00909E3C /* Assets.xcassets */,
 				A3DF55212AF129FF00909E3C /* Preview Content */,
-				A3DF55472AF1386500909E3C /* DBConnection.swift */,
 			);
 			path = LitLibrary;
 			sourceTree = "<group>";
@@ -123,14 +122,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A3DF55402AF12E4800909E3C /* Authentication */ = {
+		A3DF55402AF12E4800909E3C /* Authenticated */ = {
 			isa = PBXGroup;
 			children = (
 				A3DF554C2AF17A5500909E3C /* ProfileView.swift */,
 				A3DF55572AF23D9B00909E3C /* FavoritesView.swift */,
 				A3DF554A2AF164C000909E3C /* BooksView.swift */,
 			);
-			path = Authentication;
+			path = Authenticated;
 			sourceTree = "<group>";
 		};
 		A3DF55492AF1649900909E3C /* Views */ = {
@@ -138,7 +137,7 @@
 			children = (
 				A3DF55622AF2862B00909E3C /* Components */,
 				A3DF55612AF2860700909E3C /* Unauthenticated */,
-				A3DF55402AF12E4800909E3C /* Authentication */,
+				A3DF55402AF12E4800909E3C /* Authenticated */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -146,6 +145,7 @@
 		A3DF55502AF17B0C00909E3C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A3DF55472AF1386500909E3C /* DBConnection.swift */,
 				A3DF55532AF183A500909E3C /* BookData.swift */,
 				A3DF55552AF184BB00909E3C /* BooksAPI.swift */,
 			);

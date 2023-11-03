@@ -110,7 +110,7 @@ struct LoginView: View {
                         }
                         .padding(.horizontal, 25)
                     }
-                NavigationLink(destination: RegisterView(db: DBConnection())
+                NavigationLink(destination: RegisterView(db: db)
                     .navigationBarBackButtonHidden(true), label: {
                         Text("Register")
                             .bold()

@@ -35,47 +35,33 @@ class DBConnection: ObservableObject {
         }
     }
     
-    func RegisterUser(name: String, email: String, password: String, confirmPassword: String) -> Bool {
-        
-        var success = false
-        
+    func RegisterUser(name: String, email: String, password: String, confirmPassword: String, completion: @escaping (Bool) -> Void) {
         auth.createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                
-                print(error.localizedDescription)
-                success = false
-                return
-            }
-            if let _ = authResult {
+                print("Failed to create account: \(error.localizedDescription)")
+                completion(false) // Registration failed
+            } else if let _ = authResult {
                 print("Account created")
-                success = true
+                completion(true) // Registration successful
             }
         }
-        
-        return success
     }
+
     
-    func LoginUser(email: String, password: String) -> Bool {
-        
-        var success = false
-        
+    func LoginUser(email: String, password: String, completion: @escaping (Bool) -> Void) {
         auth.signIn(withEmail: email, password: password) { authDataResult, error in
-            
-            if let _ = error {
-                print("Error logging in")
-                success = false
-            }
-            
-            if let _ = authDataResult {
+            if let error = error {
+                print("Error logging in: \(error.localizedDescription)")
+                completion(false) // Login not performed
+            } else if let _ = authDataResult {
                 print("Successfully logged in!")
-                success = true
+                completion(true) // Login successful
             }
         }
-        
-        return success
     }
+
     
-    func logOutUser() -> Bool {
+    func LogOutUser() -> Bool {
         var success = false
 
         do {

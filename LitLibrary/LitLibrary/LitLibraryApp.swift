@@ -20,14 +20,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct LitLibraryApp: App {
-
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var dbConnection = DBConnection()
+    @StateObject var booksAPI = BooksAPI()
     
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                ContentView()
+                //ContentView()
+                LoginView(db: dbConnection, booksApi: booksAPI)
             }
         }
     }

@@ -13,7 +13,7 @@ import SwiftUI
 struct RegisterView:View {
     
     @ObservedObject var db: DBConnection
-    
+    @ObservedObject var booksApi: BooksAPI
     
     @State var color = Color.black.opacity(0.7)
     @State var email = ""
@@ -23,138 +23,145 @@ struct RegisterView:View {
     @State var visible = false
     @State var revisible = false
 
-    @State private var registrationSuccess = false
+    @State private var isRegistrationSuccess = false
     
     var body: some View {
         ZStack{
             
             ZStack(alignment: .topTrailing){
-                GeometryReader{ geometry in
-                    VStack() {
-                        
-                        Image("login")
-                            .resizable()
-                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.4, alignment: .center)
-                        Text("Create an account")
-                            .font(.title3)
-                            .bold()
-                            .foregroundColor( Color.black.opacity(0.7))
-                            .padding()
-                        
-                        TextField("Name", text:$name)
-                            .textInputAutocapitalization(.none)
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 4).stroke(self.name != "" ? Color.indigo : self.color, lineWidth: 2))
-                            .padding(.top, 10)
-                        
-                        TextField("Email", text: $email)
-                            .textInputAutocapitalization(.none)
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
-                            .padding(.top, 10)
-                        
-                        HStack(spacing: 15){
-                            VStack{
-                                
-                                if self.visible{
-                                    TextField("Password", text: $password)
-                                        .textInputAutocapitalization(.none)
-                                }else{
-                                    SecureField("Password", text: $password)
-                                        .textInputAutocapitalization(.none)
-                                }
-                            }
+                NavigationStack{
+                    GeometryReader{ geometry in
+                        VStack() {
                             
-                            Button(action: {
-                                self.visible.toggle()
-                            }){
-                                Image(systemName: self.visible ? "eye.slash.fill" : "eye.fill")
-                                    .foregroundColor(self.color)
-                            }
-                        }
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
-                        .padding(.top, 10)
-                        
-                        ZStack(alignment: .trailing){
+                            Image("login")
+                                .resizable()
+                                .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.4, alignment: .center)
+                            Text("Create an account")
+                                .font(.title3)
+                                .bold()
+                                .foregroundColor( Color.black.opacity(0.7))
+                                .padding()
+                            
+                            TextField("Name", text:$name)
+                                .textInputAutocapitalization(.none)
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.name != "" ? Color.indigo : self.color, lineWidth: 2))
+                                .padding(.top, 10)
+                            
+                            TextField("Email", text: $email)
+                                .textInputAutocapitalization(.none)
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
+                                .padding(.top, 10)
+                            
                             HStack(spacing: 15){
-                                
                                 VStack{
-                                    if self.revisible{
-                                        TextField("Confirm password", text: $confirmPassword)
+                                    
+                                    if self.visible{
+                                        TextField("Password", text: $password)
                                             .textInputAutocapitalization(.none)
                                     }else{
-                                        SecureField("Confirm password", text:  $confirmPassword)
+                                        SecureField("Password", text: $password)
                                             .textInputAutocapitalization(.none)
                                     }
                                 }
+                                
                                 Button(action: {
-                                                             
-                                 self.revisible.toggle()
-                                                             
-                                }) {
-                                                             
-                                Image(systemName: self.revisible ? "eye.slash.fill" : "eye.fill")
+                                    self.visible.toggle()
+                                }){
+                                    Image(systemName: self.visible ? "eye.slash.fill" : "eye.fill")
                                         .foregroundColor(self.color)
-                              }
+                                }
                             }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
+                            .padding(.top, 10)
                             
-                            if !password.isEmpty && !confirmPassword.isEmpty {
-                                if password == confirmPassword {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .imageScale(.large)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Color(.systemGreen))
-                                } else {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .imageScale(.large)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Color(.systemRed))
+                            ZStack(alignment: .trailing){
+                                HStack(spacing: 15){
+                                    
+                                    VStack{
+                                        if self.revisible{
+                                            TextField("Confirm password", text: $confirmPassword)
+                                                .textInputAutocapitalization(.none)
+                                        }else{
+                                            SecureField("Confirm password", text:  $confirmPassword)
+                                                .textInputAutocapitalization(.none)
+                                        }
+                                    }
+                                    Button(action: {
+                                        
+                                        self.revisible.toggle()
+                                        
+                                    }) {
+                                        
+                                        Image(systemName: self.revisible ? "eye.slash.fill" : "eye.fill")
+                                            .foregroundColor(self.color)
+                                    }
+                                }
+                                
+                                if !password.isEmpty && !confirmPassword.isEmpty {
+                                    if password == confirmPassword {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .imageScale(.large)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color(.systemGreen))
+                                    } else {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .imageScale(.large)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color(.systemRed))
+                                    }
                                 }
                             }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 4).stroke(self.confirmPassword != "" ? Color.indigo : self.color,lineWidth: 2))
+                            .padding(.top, 10)
+                            
+                            Button(action: {
+                                if !email.isEmpty && !password.isEmpty && password == confirmPassword {
+                                    
+                                    //let isSuccess =
+                                    db.RegisterUser(name: name,
+                                                    email: email,
+                                                    password: password,
+                                                    confirmPassword: confirmPassword){ success in
+                                        if success {
+                                            isRegistrationSuccess = true
+                                        } else {
+                                            print("Failed to create")
+                                        }
+                                }
+                                }
+                            }, label: {
+                                Text("Register")
+                                    .foregroundColor(.white)
+                                    .padding(.vertical)
+                                    .frame(width: UIScreen.main.bounds.width - 50)
+                            })
+                            .navigationDestination(isPresented: $isRegistrationSuccess, destination: {
+                                LoginView(db: db, booksApi: booksApi)
+                            })
+                            .background(Color.indigo)
+                            //                        .disabled(!formIsValid)
+                            //                        .opacity(formIsValid ? 1.0 : 0.5)
+                            .cornerRadius(10)
+                            .padding(.top, 25)
                         }
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 4).stroke(self.confirmPassword != "" ? Color.indigo : self.color,lineWidth: 2))
-                        .padding(.top, 10)
-              
-                        Button(action: {
-                            if !email.isEmpty && !password.isEmpty && password == confirmPassword {
-                                
-                             let isSuccess = db.RegisterUser(name: name,
-                                                email: email,
-                                                password: password,
-                                                confirmPassword: confirmPassword)
-                                
-                                if !isSuccess {
-                                    print("Failed to create account!")
-                                }
-                            }
-                        }, label: {
-                            Text("Register")
-                                .foregroundColor(.white)
-                                .padding(.vertical)
-                                .frame(width: UIScreen.main.bounds.width - 50)
-                        })
-                        .background(Color.indigo)
-//                        .disabled(!formIsValid)
-//                        .opacity(formIsValid ? 1.0 : 0.5)
-                        .cornerRadius(10)
-                        .padding(.top, 25)
+                        .padding(.horizontal, 25)
                     }
-                    .padding(.horizontal, 25)
+                    
+                    NavigationLink(destination: LoginView(db: db, booksApi: booksApi).navigationBarBackButtonHidden(true), label: {
+                        HStack{
+                            Text("Already have an account?")
+                                .foregroundColor(.gray)
+                            Text("Sign In")
+                                .bold()
+                                .foregroundColor(.gray)
+                        }
+                    })
+                    .padding()
                 }
-                
-                NavigationLink(destination: LoginView(db: db).navigationBarBackButtonHidden(true), label: {
-                    HStack{
-                        Text("Already have an account?")
-                            .foregroundColor(.gray)
-                        Text("Sign In")
-                            .bold()
-                            .foregroundColor(.gray)
-                    }
-                })
-                .padding()
-                
             }
         }
     }
@@ -173,5 +180,5 @@ struct RegisterView:View {
 //}
 
 #Preview {
-    RegisterView(db: DBConnection())
+    RegisterView(db: DBConnection(), booksApi: BooksAPI())
 }

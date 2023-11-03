@@ -1,3 +1,4 @@
+
 //
 //  loginView.swift
 //  LitLibrary
@@ -11,20 +12,22 @@ import SwiftUI
 struct LoginView: View {
     
     @ObservedObject var db: DBConnection
+    @ObservedObject var booksApi: BooksAPI
+    
     
        @State var color = Color.black.opacity(0.7)
        @State var email = ""
        @State var password = ""
        @State var visible = false
-       @State var alert = false
-       @State var error = ""
+       @State var isLoggedIn = false
       
     var body: some View {
         ZStack{
             
             ZStack(alignment: .topTrailing){
+                NavigationStack{
                 GeometryReader{ geometry in
-                
+                  
                         VStack() {
                             
                             Image("login")
@@ -72,10 +75,10 @@ struct LoginView: View {
                                     if !email.isEmpty {
                                         
                                         let isSuccess = db.resetPassword(email: email)
-                                           
-                                           if !isSuccess {
-                                               print("Failed to reset password!")
-                                           }
+                                        
+                                        if !isSuccess {
+                                            print("Failed to reset password!")
+                                        }
                                     }
                                 }, label: {
                                     Text("Forget password")
@@ -89,12 +92,18 @@ struct LoginView: View {
                                 
                                 if !email.isEmpty && !password.isEmpty {
                                     
-                                    let isSuccess = db.LoginUser(email: email, password: password)
-                                       
-                                       if !isSuccess {
-                                           print("Failed to logging in!")
-                                       }
-                                    
+                                    //let isSuccess =
+                                    db.LoginUser(email: email, password: password){ success in
+                                        
+                                        if success{
+                                            isLoggedIn = true
+                                        }else {
+                                            print("Failed to logging in!")
+                                        }
+                                        //                                       if !isSuccess {
+                                        //                                           print("Failed to logging in!")
+                                        //                                       }
+                                    }
                                 }
                             }, label: {
                                 Text("Log in")
@@ -102,29 +111,31 @@ struct LoginView: View {
                                     .padding(.vertical)
                                     .frame(width: UIScreen.main.bounds.width - 50)
                             })
+                            .navigationDestination(isPresented: $isLoggedIn, destination: {
+                                BooksView(db: db, booksApi: booksApi)
+                            })
                             .background(Color.indigo)
-//                            .disabled(!formIsValid)
-//                            .opacity(formIsValid ? 1.0 : 0.5)
+                            //                            .disabled(!formIsValid)
+                            //                            .opacity(formIsValid ? 1.0 : 0.5)
                             .cornerRadius(10)
                             .padding(.top, 10)
                         }
                         .padding(.horizontal, 25)
                     }
-                NavigationLink(destination: RegisterView(db: db)
-                    .navigationBarBackButtonHidden(true), label: {
-                        Text("Register")
-                            .bold()
-                            .foregroundColor(.gray)
-                    })
+                    NavigationLink(destination: RegisterView(db: db, booksApi: booksApi)
+                        .navigationBarBackButtonHidden(true), label: {
+                            Text("Register")
+                                .bold()
+                                .foregroundColor(.gray)
+                        })
                     .padding()
                     
                 }
             }
         }
-
+    }
 }
 
 #Preview {
-    LoginView(db: DBConnection())
+    LoginView(db: DBConnection(), booksApi: BooksAPI())
 }
-

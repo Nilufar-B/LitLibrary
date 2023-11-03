@@ -9,8 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     
-  @StateObject var dbConnection = DBConnection()
-  @StateObject var booksAPI = BooksAPI()
+//  @StateObject var dbConnection = DBConnection()
+//  @StateObject var booksAPI = BooksAPI()
+    
+    @ObservedObject var dbConnection: DBConnection
+    @ObservedObject var booksAPI: BooksAPI
     
     var body: some View {
         
@@ -28,7 +31,7 @@ struct ContentView: View {
                             Image(systemName: "heart")
                                 .renderingMode(.template)
                         }
-                    ProfileView(db: dbConnection)
+                    ProfileView(db: dbConnection, booksApi: booksAPI)
                         .tabItem {
                             Image(systemName: "person")
                                 .renderingMode(.template)
@@ -39,7 +42,7 @@ struct ContentView: View {
                     }
                 } else {
                     NavigationStack{
-                        LoginView(db: dbConnection)
+                        LoginView(db: dbConnection, booksApi: booksAPI)
                     }
                 }
         
@@ -49,5 +52,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(dbConnection: DBConnection(), booksAPI: BooksAPI())
 }

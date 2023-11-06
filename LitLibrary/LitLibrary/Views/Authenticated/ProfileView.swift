@@ -13,16 +13,18 @@ struct ProfileView: View {
     @ObservedObject var db: DBConnection
     @ObservedObject var booksApi: BooksAPI
     
+    @State var name = ""
     @State var email = ""
     @State var password = ""
     @State var isLoggedOut = false
+    @State var isAccountDeleted = false
 
         
     
     var body: some View {
         NavigationStack{
-       
-                if let _ = db.currentUser {
+            GeometryReader{ geometry in
+                if let user = db.currentUser {
                     List{
                         Section{
                             HStack {
@@ -34,12 +36,12 @@ struct ProfileView: View {
                                     .background(Color(.systemGray3))
                                     .clipShape(Circle())
                                 VStack(alignment:.leading, spacing: 4){
-                                    Text("JD")
+                                    Text(user.displayName ?? "")
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .padding(.top, 4)
                                     
-                                    Text("JD")
+                                    Text(user.email ?? "")
                                         .font(.footnote)
                                         .foregroundColor(.gray)
                                 }
@@ -63,18 +65,18 @@ struct ProfileView: View {
                         Section("Account"){
                             Button(action: {
                                 
-                        print("Sign out...")
+                                print("Sign out...")
                                 
-                let isSuccess = db.LogOutUser()
-                                if isSuccess{
-                                    isLoggedOut = true
-                                }else {
-                                    print("Failed to log out!")
+                                db.LogOutUser(){success in
+                                    if success {
+                                        isLoggedOut = true
+                                    }else {
+                                        print("Failed to log out!")
+                                    }
+                                    //                                if !isSuccess {
+                                    //                                    print("Failed to log out!")
+                                    //                                }
                                 }
-//                                if !isSuccess {
-//                                    print("Failed to log out!")
-//                                }
-                                
                             }, label: {
                                 SettingsView(imageName: "arrow.left.circle.fill",
                                              title: "Sign Out",
@@ -87,21 +89,30 @@ struct ProfileView: View {
                             Button(action: {
                                 
                                 print("Delete account...")
-                                let isSuccess = db.deleteAccount()
-                                
-                                if !isSuccess {
-                                    print("Failed to delete account!")
+                                //                            let isSuccess =
+                                db.deleteAccount(){ success in
+                                    
+                                    if success{
+                                        isAccountDeleted = true
+                                    }else {
+                                        print("Failed to log out!")
+                                    }
+                                    //                                if !isSuccess {
+                                    //                                    print("Failed to delete account!")
+                                    //                                }
                                 }
-                                
                             }, label: {
                                 SettingsView(imageName: "xmark.circle.fill",
                                              title: "Delete account",
                                              tintColor: .red)
                             })
+                            .navigationDestination(isPresented: $isAccountDeleted) {
+                                LoginView(db: db, booksApi: booksApi)
+                            }
                         }
                     }
                 }
-            
+            }
         }
     }
 }

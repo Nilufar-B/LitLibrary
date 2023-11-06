@@ -32,6 +32,7 @@
 		A3DF555E2AF2502900909E3C /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = A3DF555D2AF2502900909E3C /* FirebaseStorageCombine-Community */; };
 		A3DF55602AF253D800909E3C /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DF555F2AF253D800909E3C /* LogoView.swift */; };
 		A3DF55642AF2867B00909E3C /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DF55632AF2867B00909E3C /* SearchBar.swift */; };
+		A3DF556E2AF8FD5F00909E3C /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A3DF556D2AF8FD5F00909E3C /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3DF556E2AF8FD5F00909E3C /* FirebaseDatabase in Frameworks */,
 				A3DF55342AF12B2C00909E3C /* FirebaseAnalyticsSwift in Frameworks */,
 				A3DF553B2AF12B4000909E3C /* FirebaseAuth in Frameworks */,
 				A3DF555E2AF2502900909E3C /* FirebaseStorageCombine-Community in Frameworks */,
@@ -195,6 +197,7 @@
 				A3DF553E2AF12B4E00909E3C /* FirebaseFirestoreSwift */,
 				A3DF555B2AF2501D00909E3C /* FirebaseStorage */,
 				A3DF555D2AF2502900909E3C /* FirebaseStorageCombine-Community */,
+				A3DF556D2AF8FD5F00909E3C /* FirebaseDatabase */,
 			);
 			productName = LitLibrary;
 			productReference = A3DF55182AF129FD00909E3C /* LitLibrary.app */;
@@ -529,6 +532,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A3DF552E2AF12B2C00909E3C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
+		};
+		A3DF556D2AF8FD5F00909E3C /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A3DF552E2AF12B2C00909E3C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

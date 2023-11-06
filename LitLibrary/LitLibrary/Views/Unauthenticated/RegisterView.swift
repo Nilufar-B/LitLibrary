@@ -137,7 +137,7 @@ struct RegisterView:View {
                                 Text("Register")
                                     .foregroundColor(.white)
                                     .padding(.vertical)
-                                    .frame(width: UIScreen.main.bounds.width - 50)
+                                    .frame(width: geometry.size.width * 0.9)
                             })
                             .navigationDestination(isPresented: $isRegistrationSuccess, destination: {
                                 LoginView(db: db, booksApi: booksApi)

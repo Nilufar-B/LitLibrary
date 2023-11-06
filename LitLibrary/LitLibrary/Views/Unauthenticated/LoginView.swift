@@ -28,7 +28,7 @@ struct LoginView: View {
                 NavigationStack{
                 GeometryReader{ geometry in
                   
-                        VStack() {
+                        VStack {
                             
                             Image("login")
                                 .resizable()
@@ -109,7 +109,7 @@ struct LoginView: View {
                                 Text("Log in")
                                     .foregroundColor(.white)
                                     .padding(.vertical)
-                                    .frame(width: UIScreen.main.bounds.width - 50)
+                                    .frame(width: geometry.size.width * 0.9)
                             })
                             .navigationDestination(isPresented: $isLoggedIn, destination: {
                                 BooksView(db: db, booksApi: booksApi)
@@ -122,14 +122,16 @@ struct LoginView: View {
                         }
                         .padding(.horizontal, 25)
                     }
-                    NavigationLink(destination: RegisterView(db: db, booksApi: booksApi)
-                        .navigationBarBackButtonHidden(true), label: {
-                            Text("Register")
-                                .bold()
-                                .foregroundColor(.gray)
-                        })
-                    .padding()
-                    
+               
+                  
+                        Spacer()
+                        NavigationLink(destination: RegisterView(db: db, booksApi: booksApi)
+                            .navigationBarBackButtonHidden(true), label: {
+                                Text("Register")
+                                    .bold()
+                                    .foregroundColor(.gray)
+                            })
+                        .padding()
                 }
             }
         }

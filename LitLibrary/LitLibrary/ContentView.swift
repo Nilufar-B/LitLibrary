@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     
-//  @StateObject var dbConnection = DBConnection()
-//  @StateObject var booksAPI = BooksAPI()
+  @StateObject var dbConnection = DBConnection()
+  @StateObject var booksAPI = BooksAPI()
     
-    @ObservedObject var dbConnection: DBConnection
-    @ObservedObject var booksAPI: BooksAPI
+//    @ObservedObject var dbConnection: DBConnection
+//    @ObservedObject var booksAPI: BooksAPI
     
     var body: some View {
         

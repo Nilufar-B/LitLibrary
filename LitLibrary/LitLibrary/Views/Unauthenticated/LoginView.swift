@@ -27,6 +27,14 @@ struct LoginView: View {
             ZStack(alignment: .topTrailing){
                 NavigationStack{
                 GeometryReader{ geometry in
+                    
+                    NavigationLink(destination: RegisterView(db: db, booksApi: booksApi)
+                        .navigationBarBackButtonHidden(true), label: {
+                            Text("Register")
+                                .bold()
+                                .foregroundColor(.gray)
+                        })
+                    .padding()
                   
                         VStack {
                             
@@ -37,36 +45,37 @@ struct LoginView: View {
                                 .font(.title3)
                                 .bold()
                                 .foregroundColor( Color.black.opacity(0.7))
-                                .padding(.top, 35)
                             
-                            TextField("Email", text: $email)
-                                .textInputAutocapitalization(.none)
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
-                                .padding(.top, 10)
-                            
-                            HStack(spacing: 15){
-                                VStack{
+                            VStack(spacing: 15) {
+                                TextField("Email", text: $email)
+                                    .textInputAutocapitalization(.none)
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
+                                
+                                
+                                HStack {
+                                    VStack{
+                                        
+                                        if self.visible{
+                                            TextField("Password", text: $password)
+                                                .textInputAutocapitalization(.none)
+                                        }else{
+                                            SecureField("Password", text: $password)
+                                                .textInputAutocapitalization(.none)
+                                        }
+                                    }
                                     
-                                    if self.visible{
-                                        TextField("Password", text: $password)
-                                            .textInputAutocapitalization(.none)
-                                    }else{
-                                        SecureField("Password", text: $password)
-                                            .textInputAutocapitalization(.none)
+                                    Button(action: {
+                                        self.visible.toggle()
+                                    }){
+                                        Image(systemName: self.visible ? "eye.slash.fill" : "eye.fill")
+                                            .foregroundColor(self.color)
                                     }
                                 }
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
                                 
-                                Button(action: {
-                                    self.visible.toggle()
-                                }){
-                                    Image(systemName: self.visible ? "eye.slash.fill" : "eye.fill")
-                                        .foregroundColor(self.color)
-                                }
                             }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
-                            .padding(.top, 10)
                             
                             HStack{
                                 Spacer()
@@ -86,13 +95,13 @@ struct LoginView: View {
                                         .foregroundColor(.gray)
                                 })
                             }
-                            .padding(.top, 20)
+                          
+                            Spacer()
                             
                             Button(action: {
                                 
                                 if !email.isEmpty && !password.isEmpty {
-                                    
-                                    //let isSuccess =
+
                                     db.LoginUser(email: email, password: password){ success in
                                         
                                         if success{
@@ -100,9 +109,7 @@ struct LoginView: View {
                                         }else {
                                             print("Failed to logging in!")
                                         }
-                                        //                                       if !isSuccess {
-                                        //                                           print("Failed to logging in!")
-                                        //                                       }
+                                    
                                     }
                                 }
                             }, label: {
@@ -118,20 +125,11 @@ struct LoginView: View {
                             //                            .disabled(!formIsValid)
                             //                            .opacity(formIsValid ? 1.0 : 0.5)
                             .cornerRadius(10)
-                            .padding(.top, 10)
+                           
                         }
                         .padding(.horizontal, 25)
                     }
-               
-                  
-                        Spacer()
-                        NavigationLink(destination: RegisterView(db: db, booksApi: booksApi)
-                            .navigationBarBackButtonHidden(true), label: {
-                                Text("Register")
-                                    .bold()
-                                    .foregroundColor(.gray)
-                            })
-                        .padding()
+                
                 }
             }
         }

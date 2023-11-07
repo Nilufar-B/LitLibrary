@@ -53,6 +53,7 @@
 		A3DF55572AF23D9B00909E3C /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		A3DF555F2AF253D800909E3C /* LogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		A3DF55632AF2867B00909E3C /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		A3F32B8A2AFA2E0F00FBF9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +97,7 @@
 		A3DF551A2AF129FD00909E3C /* LitLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				A3F32B8A2AFA2E0F00FBF9CF /* Info.plist */,
 				A3DF55502AF17B0C00909E3C /* Model */,
 				A3DF55492AF1649900909E3C /* Views */,
 				A3DF551B2AF129FD00909E3C /* LitLibraryApp.swift */,
@@ -406,6 +408,7 @@
 				DEVELOPMENT_TEAM = RYM5KD2PV8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LitLibrary/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -435,6 +438,7 @@
 				DEVELOPMENT_TEAM = RYM5KD2PV8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LitLibrary/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

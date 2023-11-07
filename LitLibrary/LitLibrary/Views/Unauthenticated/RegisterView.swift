@@ -31,92 +31,95 @@ struct RegisterView:View {
             ZStack(alignment: .topTrailing){
                 NavigationStack{
                     GeometryReader{ geometry in
-                        VStack() {
+                        VStack {
                             
                             Image("login")
                                 .resizable()
                                 .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.4, alignment: .center)
+                            
                             Text("Create an account")
                                 .font(.title3)
                                 .bold()
                                 .foregroundColor( Color.black.opacity(0.7))
                                 .padding()
                             
-                            TextField("Name", text:$name)
-                                .textInputAutocapitalization(.none)
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.name != "" ? Color.indigo : self.color, lineWidth: 2))
-                                .padding(.top, 10)
-                            
-                            TextField("Email", text: $email)
-                                .textInputAutocapitalization(.none)
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
-                                .padding(.top, 10)
-                            
-                            HStack(spacing: 15){
-                                VStack{
-                                    
-                                    if self.visible{
-                                        TextField("Password", text: $password)
-                                            .textInputAutocapitalization(.none)
-                                    }else{
-                                        SecureField("Password", text: $password)
-                                            .textInputAutocapitalization(.none)
-                                    }
-                                }
+                            VStack(spacing: 15) {
+                                TextField("Name", text:$name)
+                                    .textInputAutocapitalization(.none)
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.name != "" ? Color.indigo : self.color, lineWidth: 2))
                                 
-                                Button(action: {
-                                    self.visible.toggle()
-                                }){
-                                    Image(systemName: self.visible ? "eye.slash.fill" : "eye.fill")
-                                        .foregroundColor(self.color)
-                                }
-                            }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
-                            .padding(.top, 10)
-                            
-                            ZStack(alignment: .trailing){
-                                HStack(spacing: 15){
-                                    
+                                
+                                TextField("Email", text: $email)
+                                    .textInputAutocapitalization(.none)
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
+                                
+                                
+                                HStack {
                                     VStack{
-                                        if self.revisible{
-                                            TextField("Confirm password", text: $confirmPassword)
+                                        
+                                        if self.visible{
+                                            TextField("Password", text: $password)
                                                 .textInputAutocapitalization(.none)
                                         }else{
-                                            SecureField("Confirm password", text:  $confirmPassword)
+                                            SecureField("Password", text: $password)
                                                 .textInputAutocapitalization(.none)
                                         }
                                     }
+                                    
                                     Button(action: {
-                                        
-                                        self.revisible.toggle()
-                                        
-                                    }) {
-                                        
-                                        Image(systemName: self.revisible ? "eye.slash.fill" : "eye.fill")
+                                        self.visible.toggle()
+                                    }){
+                                        Image(systemName: self.visible ? "eye.slash.fill" : "eye.fill")
                                             .foregroundColor(self.color)
                                     }
                                 }
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
+                               
                                 
-                                if !password.isEmpty && !confirmPassword.isEmpty {
-                                    if password == confirmPassword {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .imageScale(.large)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(Color(.systemGreen))
-                                    } else {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .imageScale(.large)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(Color(.systemRed))
+                              ZStack(alignment: .trailing){
+                              
+                                        
+                                        VStack{
+                                            if self.revisible{
+                                                TextField("Confirm password", text: $confirmPassword)
+                                                    .textInputAutocapitalization(.none)
+                                            }else{
+                                                SecureField("Confirm password", text:  $confirmPassword)
+                                                    .textInputAutocapitalization(.none)
+                                            }
+                                        }
+                                        Button(action: {
+                                            
+                                            self.revisible.toggle()
+                                            
+                                        }) {
+                                            
+                                            Image(systemName: self.revisible ? "eye.slash.fill" : "eye.fill")
+                                                .foregroundColor(self.color)
+                                        }
+                         
+                                    if !password.isEmpty && !confirmPassword.isEmpty {
+                                        if password == confirmPassword {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .imageScale(.large)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color(.systemGreen))
+                                        } else {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .imageScale(.large)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color(.systemRed))
+                                        }
                                     }
-                                }
+                               }
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.confirmPassword != "" ? Color.indigo : self.color,lineWidth: 2))
+                               
+                                
                             }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 4).stroke(self.confirmPassword != "" ? Color.indigo : self.color,lineWidth: 2))
-                            .padding(.top, 10)
                             
                             Button(action: {
                                 if !email.isEmpty && !password.isEmpty && password == confirmPassword {

@@ -15,56 +15,63 @@ struct BooksView: View {
     @State private var searchText = ""
     
     var body: some View {
-        
-        VStack {
-            LogoView()
-            SearchBar(searchText: $searchText)
-   
-        
-            List() {
-
-                ForEach(booksApi.books) { book in
-                    AsyncImage(url: URL(string: book.volumeInfo.imageLinks?.thumbnail ?? ""), content: {image in
-                        
-                        HStack {
-                            image
-                                .resizable()
-                                .frame(width: 140, height: 200, alignment: .center)
-                                .cornerRadius(10)
+        GeometryReader{ geometry in
+            VStack {
+                LogoView()
+              
+                VStack{
+             
+                SearchBar(searchText: $searchText)
+                    
+                List() {
+                    
+                    ForEach(booksApi.books) { book in
+                        AsyncImage(url: URL(string: book.volumeInfo.imageLinks?.thumbnail ?? ""), content: {image in
                             
-                            VStack {
-        
-                                Text(book.volumeInfo.title)
-                            
-                             
+                            HStack {
+                                image
+                                    .resizable()
+                                    .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.2, alignment: .center)
+                                    .cornerRadius(10)
+                                
+                                VStack {
+                                    
+                                    Text(book.volumeInfo.title)
+                                        .bold()
+                                    Text(book.volumeInfo.description.prefix(150) + "...")
+                                    
+                                    
+                                }
+                                
                             }
                             
-                        }
-
-                        
-                    }, placeholder: {
-                        ProgressView()
-                    })
+                            
+                        }, placeholder: {
+                            ProgressView()
+                        })
+                    }
+                    
                 }
-
-            }
-            .task {
-                do {
-                    try await booksApi.getBooks()
-                } catch APIErrors.invalidData {
-                    print("Invalid Data")
-                } catch APIErrors.invalidURL {
-                    print("Invalid Url")
-                } catch APIErrors.invalidResponse {
-                    print("Invalid Response")
-                } catch {
-                    print("General error")
+              
+                }  .task {
+                    do {
+                        try await booksApi.getBooks()
+                    } catch APIErrors.invalidData {
+                        print("Invalid Data")
+                    } catch APIErrors.invalidURL {
+                        print("Invalid Url")
+                    } catch APIErrors.invalidResponse {
+                        print("Invalid Response")
+                    } catch {
+                        print("General error")
+                    }
                 }
             
-           }
+            }
+           // .frame(width: geometry.size.width, height: geometry.size.height)
+        
+            
         }
-        .padding()
-
     }
 }
 

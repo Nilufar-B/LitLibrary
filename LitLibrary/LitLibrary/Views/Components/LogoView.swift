@@ -10,27 +10,32 @@ import SwiftUI
 struct LogoView: View {
     
     var body: some View {
-        VStack(alignment: .leading){
-            HStack{
-                Image("appLogo")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .padding(.leading, 5)
-                Text("LitLibrary")
-                    .bold()
+       // GeometryReader { geometry in
+            VStack(alignment: .leading){
+                HStack{
+                    Image("appLogo")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        //.frame(width: geometry.size.width * 0.13, height: geometry.size.height * 0.07, alignment: .leading)
+                      
+                    Text("LitLibrary")
+                        .bold()
+                }
+                
+                Rectangle()
+                    .frame(height: 2)
+                   // .frame(height: geometry.size.height * 0.002)
+                    .foregroundColor(.gray)
             }
-    
-            Rectangle()
-                            .frame(height: 2)
-                            .foregroundColor(.gray)
-        }
-    
-        Spacer()
+            
+            //Spacer()
+       // }
+        
     }
-  
-
 }
 
 #Preview {
     LogoView()
 }
+
+

@@ -143,13 +143,6 @@ class DBConnection: ObservableObject {
             
             return success
         }
-    
-//    func addFavoriteBook(bookTitle: String) {
-//        if let user = currentUser {
-//            let bookData = ["title": bookTitle]
-//            dbReference.child("favoriteBooks").childByAutoId().setValue(bookData)
-//        }
-//    }
 
 
 }

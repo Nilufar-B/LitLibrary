@@ -73,9 +73,6 @@ struct ProfileView: View {
                                     }else {
                                         print("Failed to log out!")
                                     }
-                                    //                                if !isSuccess {
-                                    //                                    print("Failed to log out!")
-                                    //                                }
                                 }
                             }, label: {
                                 SettingsView(imageName: "arrow.left.circle.fill",
@@ -97,9 +94,6 @@ struct ProfileView: View {
                                     }else {
                                         print("Failed to log out!")
                                     }
-                                    //                                if !isSuccess {
-                                    //                                    print("Failed to delete account!")
-                                    //                                }
                                 }
                             }, label: {
                                 SettingsView(imageName: "xmark.circle.fill",

@@ -10,7 +10,7 @@ import SwiftUI
 struct LogoView: View {
     
     var body: some View {
-       // GeometryReader { geometry in
+
             VStack(alignment: .leading){
                 HStack{
                     Image("appLogo")
@@ -26,11 +26,7 @@ struct LogoView: View {
                     .frame(height: 2)
                    // .frame(height: geometry.size.height * 0.002)
                     .foregroundColor(.gray)
-            }
-            
-            //Spacer()
-       // }
-        
+            }      
     }
 }
 

@@ -10,15 +10,16 @@ import Foundation
 
 struct Book:  Identifiable, Codable{
     var id: String
-    var volumeInfo: VolumeInfo
+    var volumeInfo: VolumeInfo?
 }
 
 struct VolumeInfo: Codable {
-    var title: String
+    var title: String?
     var authors: [String]?
     var categories: [String]?
-    var description: String
+    var description: String?
     var imageLinks: ImageLinks?
+    let canonicalVolumeLink: String?
 
 }
 
@@ -30,4 +31,6 @@ struct ImageLinks : Codable {
 struct BooksResponse: Codable {
     var items: [Book]
 }
+
+
 

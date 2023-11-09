@@ -12,8 +12,7 @@ struct SearchBar: View {
     @Binding var searchText: String
     
     var body: some View {
-        
-     //   GeometryReader { geometry in
+
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
@@ -32,8 +31,7 @@ struct SearchBar: View {
             .padding(8)
             .background(Color(.systemGray6))
             .cornerRadius(10)
-            
-     //   }
+
     }
 }
 

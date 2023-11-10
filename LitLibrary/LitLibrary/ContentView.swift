@@ -11,15 +11,14 @@ struct ContentView: View {
     
   @StateObject var dbConnection = DBConnection()
   @StateObject var booksAPI = BooksAPI()
+  @State private var isUserLoggedIn = false
     
 //    @ObservedObject var dbConnection: DBConnection
 //    @ObservedObject var booksAPI: BooksAPI
     
     var body: some View {
-        
-                if let _ = dbConnection.currentUser{
-                    
         NavigationStack{
+                if let _ = dbConnection.currentUser{
            TabView {
                     BooksView(db: dbConnection, booksApi: booksAPI)
                         .tabItem {
@@ -38,10 +37,7 @@ struct ContentView: View {
                         }
                     }
            .accentColor(.orange)
-                  
-                    }
                 } else {
-                    NavigationStack{
                         LoginView(db: dbConnection, booksApi: booksAPI)
                     }
                 }

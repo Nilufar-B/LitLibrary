@@ -30,36 +30,36 @@ class DBConnection: ObservableObject {
             } else {
                 
                 self.currentUser = nil
-             
-                print("User has logged out")
                 
+                print("User has logged out")
             }
         }
     }
-    
-    
+
     func RegisterUser(name: String, email: String, password: String, confirmPassword: String, completion: @escaping (Bool) -> Void) {
         auth.createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 print("Failed to create account: \(error.localizedDescription)")
                 completion(false) // Registration failed
-            } else if let _ = authResult {
+            } else if let authResult = authResult {
                 print("Account created")
                 
                 let user = self.auth.currentUser
-                            let changeRequest = user?.createProfileChangeRequest()
-                            changeRequest?.displayName = name
-                            changeRequest?.commitChanges { error in
-                                if let error = error {
-                                    print("Failed to set user name: \(error.localizedDescription)")
-                                } else {
-                                    print("User name set successfully")
-                                }
-                            }
-                completion(true) // Registration successful
-                
-                self.db.collection("users").addDocument(data:["name": name, "email": email])
-              
+                let changeRequest = user?.createProfileChangeRequest()
+                changeRequest?.displayName = name
+                changeRequest?.commitChanges { error in
+                    if let error = error {
+                        print("Failed to set user name: \(error.localizedDescription)")
+                    } else {
+                        print("User name set successfully")
+                        
+                        // Adding user data to the "users" collection with UID
+                        let uid = authResult.user.uid
+                        self.db.collection("users").document(uid).setData(["name": name, "email": email, "uid": uid])
+                        
+                        completion(true) // Registration successful
+                    }
+                }
             }
         }
     }
@@ -95,10 +95,15 @@ class DBConnection: ObservableObject {
         completion(success)
     }
 
+
+
     func deleteAccount(completion: @escaping (Bool) -> Void) {
         if let user = auth.currentUser {
+            let uid = user.uid
+            print("User UID: \(uid)")
+            
             // remove document of collection "users"
-            db.collection("users").document(user.uid).delete { error in
+            db.collection("users").document(uid).delete { error in
                 if let error = error {
                     print("Error deleting user document: \(error.localizedDescription)")
                     completion(false)
@@ -128,22 +133,17 @@ class DBConnection: ObservableObject {
     }
 
         
-        func resetPassword(email: String) -> Bool {
-            var success = false
-            
-            auth.sendPasswordReset(withEmail: email) { error in
-                if let error = error {
-                    print("Error sending password reset email: \(error.localizedDescription)")
-                    success = false
-                } else {
-                    print("Password reset email sent successfully")
-                    success = true
-                }
+    func resetPassword(email: String, completion: @escaping (Bool) -> Void) {
+        auth.sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                print("Error sending password reset email: \(error.localizedDescription)")
+                completion(false)
+            } else {
+                print("Password reset email sent successfully")
+                completion(true)
             }
-            
-            return success
         }
-
+    }
 
 }
 

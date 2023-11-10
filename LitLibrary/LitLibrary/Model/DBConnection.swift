@@ -17,6 +17,8 @@ class DBConnection: ObservableObject {
     
    @Published var currentUser: User?
    @Published var name: String?
+    @Published var favoriteBooks: [String] = []
+
     
     init() {
         
@@ -144,6 +146,56 @@ class DBConnection: ObservableObject {
             }
         }
     }
+    
+
+    func userExists(email: String, completion: @escaping (Bool) -> Void) {
+        db.collection("users").whereField("email", isEqualTo: email).getDocuments { snapshot, error in
+            if let error = error {
+                print("Error checking user existence: \(error.localizedDescription)")
+                completion(false)
+            } else if let documents = snapshot?.documents, !documents.isEmpty {
+                // User with the given email already exists
+                print("User exists with email: \(email)")
+                completion(true)
+            } else {
+                // User does not exist
+                print("User does not exist with email: \(email)")
+                completion(false)
+            }
+        }
+    }
+
+    
+    
+    func addFavoriteBook(bookId: String) {
+            if let uid = currentUser?.uid {
+                // Update the path to include the user's UID
+                db.collection("users").document(uid).collection("favorites").addDocument(data: ["bookId": bookId])
+            }
+        }
+
+        func getFavoriteBooks(completion: @escaping ([String]) -> Void) {
+            if let uid = currentUser?.uid {
+                // Update the path to include the user's UID
+                db.collection("users").document(uid).collection("favorites").getDocuments { snapshot, error in
+                    if let documents = snapshot?.documents {
+                        let favoriteBooks = documents.compactMap { $0["bookId"] as? String }
+                        completion(favoriteBooks)
+                    } else {
+                        completion([])
+                    }
+                }
+            } else {
+                completion([])
+            }
+        }
+
+    func fetchFavoriteBooks() {
+            getFavoriteBooks { favoriteBooks in
+                self.favoriteBooks = favoriteBooks
+            }
+        }
+
 
 }
 

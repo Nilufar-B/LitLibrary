@@ -20,6 +20,8 @@ struct LoginView: View {
        @State var password = ""
        @State var visible = false
        @State var isLoggedIn = false
+       @State private var showAlert = false
+       @State private var alertMessage = ""
       
     var body: some View {
         ZStack{
@@ -96,8 +98,6 @@ struct LoginView: View {
                                         .foregroundColor(.gray)
                                 })
                             }
-                          
-                            Spacer()
                             
                             Button(action: {
                                 
@@ -126,6 +126,7 @@ struct LoginView: View {
                             //                            .disabled(!formIsValid)
                             //                            .opacity(formIsValid ? 1.0 : 0.5)
                             .cornerRadius(10)
+                            .padding(.top, 25)
                            
                         }
                         .padding(.horizontal, 25)

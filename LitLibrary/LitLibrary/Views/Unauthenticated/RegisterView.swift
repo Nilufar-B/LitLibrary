@@ -24,6 +24,8 @@ struct RegisterView:View {
     @State var revisible = false
 
     @State private var isRegistrationSuccess = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     var body: some View {
         ZStack{
@@ -123,33 +125,39 @@ struct RegisterView:View {
                             
                             Button(action: {
                                 if !email.isEmpty && !password.isEmpty && password == confirmPassword {
-                                    
-                                    //let isSuccess =
-                                    db.RegisterUser(name: name,
-                                                    email: email,
-                                                    password: password,
-                                                    confirmPassword: confirmPassword){ success in
-                                        if success {
-                                            isRegistrationSuccess = true
-                                        } else {
-                                            print("Failed to create")
+                                db.userExists(email: email) { exists in
+                                    DispatchQueue.main.async {
+                                        if exists {
+                                            showAlert = true
+                                            alertMessage = "User with this email already exists."
+                                                } else {
+                                            db.RegisterUser(name: name, email: email, password: password, confirmPassword: confirmPassword) { success in
+                                                    if success {
+                                                    isRegistrationSuccess = true
+                                                        } else {
+                                                        print("Failed to create")
+                                                    }
+                                               }
+                                            }
                                         }
-                                }
+                                    }
                                 }
                             }, label: {
                                 Text("Register")
-                                    .foregroundColor(.white)
-                                    .padding(.vertical)
-                                    .frame(width: geometry.size.width * 0.9)
+                                .foregroundColor(.white)
+                                .padding(.vertical)
+                                .frame(width: geometry.size.width * 0.9)
                             })
-                            .navigationDestination(isPresented: $isRegistrationSuccess, destination: {
-                                LoginView(db: db, booksApi: booksApi)
-                            })
+                            .alert(isPresented: $showAlert) {
+                                Alert(
+                                    title: Text("Registration Failed"),
+                                    message: Text(alertMessage),
+                                    dismissButton: .default(Text("OK"))
+                                )
+                            }
                             .background(Color.indigo)
-                            //                        .disabled(!formIsValid)
-                            //                        .opacity(formIsValid ? 1.0 : 0.5)
                             .cornerRadius(10)
-                            .padding(.top, 25)
+                            
                         }
                         .padding(.horizontal, 25)
                     }

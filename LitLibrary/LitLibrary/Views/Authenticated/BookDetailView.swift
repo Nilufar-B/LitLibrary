@@ -91,11 +91,11 @@ struct BookDetailView: View {
                                     .foregroundColor(.gray)
                                 
                                 Button(action: {
-                                    
+                                    toggleFavorite()
                                 }, label: {
-                                    Label("Favorite", systemImage: "suit.heart")
+                                    Label("Favorite", systemImage: isFavorite ? "suit.heart.fill" : "suit.heart")
                                         .font(.callout)
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(isFavorite ? .red : .gray)
                                 })
                                 .frame(maxWidth: .infinity)
                                 .padding(.top, 20)
@@ -139,6 +139,14 @@ struct BookDetailView: View {
             
         }
     }
+    
+    func toggleFavorite() {
+        isFavorite.toggle()
+        if isFavorite {
+            db.addFavoriteBook(bookId: book.id)
+        }
+    }
+    
     @ViewBuilder
     func BookDetails() -> some View {
         VStack{

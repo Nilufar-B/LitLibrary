@@ -18,6 +18,7 @@ struct BookDetailView: View {
     var book: Book
     @State private var animationContent: Bool = false
     @State private var offsetAnimation: Bool = false
+    @State private var isFavorite: Bool = false
     
     var body: some View {
         GeometryReader{ geometry in
@@ -50,24 +51,54 @@ struct BookDetailView: View {
                         let size = $0.size
                         
                         HStack(spacing: 20) {
-                            Image(book.volumeInfo?.imageLinks?.thumbnail ?? "")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: (size.width - 30) / 2, height: size.height)
-                            //custom corner shape
-                                .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
-                            //matched geometry ID
-                                .matchedGeometryEffect(id: book.id, in: animation)
+                            if let thumbnailURLString = book.volumeInfo?.imageLinks?.thumbnail,
+                               let thumbnailURL = URL(string: thumbnailURLString) {
+                                AsyncImage(url: thumbnailURL) { phase in
+                                    if case .success(let image) = phase {
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: (size.width - 30) / 2, height: size.height)
+                                            .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
+                                            .matchedGeometryEffect(id: book.id, in: animation)
+                                            .padding(.leading, 10)
+                                    } else {
+                                        // Handle failure, empty, or unknown state
+                                        Text("Failed to load image")
+                                            .frame(width: (size.width - 30) / 2, height: size.height)
+                                            .background(Color.gray) // Placeholder color
+                                            .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
+                                            .matchedGeometryEffect(id: book.id, in: animation)
+                                    }
+                                }
+                            } else {
+                                Rectangle()
+                                    .frame(width: (size.width - 30) / 2, height: size.height)
+                                    .background(Color.gray) // Placeholder color
+                                    .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
+                                    .matchedGeometryEffect(id: book.id, in: animation)
+                            }
+
                             
                             //book details
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(book.volumeInfo?.title ?? "Unknown")
-                                    .font(.title)
+                                    .font(.title3)
                                     .fontWeight(.semibold)
                                 
                                 Text("By " + (book.volumeInfo?.authors?.joined(separator: ", ") ?? ""))
                                     .font(.callout)
                                     .foregroundColor(.gray)
+                                
+                                Button(action: {
+                                    
+                                }, label: {
+                                    Label("Favorite", systemImage: "suit.heart")
+                                        .font(.callout)
+                                        .foregroundColor(.gray)
+                                })
+                                .frame(maxWidth: .infinity)
+                                .padding(.top, 20)
                             }
                             .padding(.trailing, 15)
                             .padding(.top, 30)
@@ -81,7 +112,7 @@ struct BookDetailView: View {
                         .fill(.gray.opacity(0.04))
                         .ignoresSafeArea()
                         .overlay(alignment: .top) {
-                            //BookDetails()
+                            BookDetails()
                         }
                         .padding(.leading, 30)
                         .padding(.top, -180)
@@ -111,16 +142,6 @@ struct BookDetailView: View {
     @ViewBuilder
     func BookDetails() -> some View {
         VStack{
-            HStack(spacing: 0) {
-                Button(action: {
-                    
-                }, label: {
-                    Label("Favorite", systemImage: "suit.heart")
-                        .font(.callout)
-                        .foregroundColor(.gray)
-                })
-                .frame(maxWidth: .infinity)
-            }
             Divider()
                 .padding(.top, 25)
 
@@ -146,19 +167,15 @@ struct BookDetailView: View {
                     .fontWeight(.semibold)
                     .padding(.horizontal, 45)
                     .padding(.vertical, 10)
-                    .background{
-                        Capsule()
-                            .fill(Color.orange.gradient)
-                    }
-                    .foregroundColor(.white)
+//                    .background{
+//                        Capsule()
+//                            .fill(Color.orange.gradient)
+//                    }
+                    .foregroundColor(.orange)
             })
             .padding(.bottom, 15)
         }
-        .padding(.top, 180)
+        .padding(.top, 120)
         .padding([.horizontal, .top], 15)
     }
-}
-
-#Preview {
-  BooksView(db: DBConnection(), booksApi: BooksAPI())
 }

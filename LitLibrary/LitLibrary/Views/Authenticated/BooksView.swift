@@ -14,134 +14,167 @@ struct BooksView: View {
     
     @State private var searchText = ""
     @State private var activateTag = "Fiction"
-    @Namespace private var animation //to make the tab indicator run smoothly we need to add a matched geometry effect so we also need an animation namespace
+    @Namespace private var animation
     @State private var showDetailView: Bool = false
     @State private var selectedBook: Book?
     @State private var animateCurrentBook: Bool = false
     
     var tags: [String] = [
-                      "Fiction",
-                      "Adventure",
-                      "Fantasy",
-                      "Drama",
-                      "Poetry",
-                      "Comics",
-                      "Romance",
-                      "Mystery",
-                      "Thrillers"
+        "Fiction",
+        "Adventure",
+        "Fantasy",
+        "Drama",
+        "Poetry",
+        "Comics",
+        "Romance",
+        "Mystery",
+        "Thrillers"
     ]
     
     var body: some View {
         NavigationStack {
-            GeometryReader{ geometry in
+            GeometryReader { geometry in
+                
                 VStack {
                     LogoView()
                     
-                    VStack{
-                        
+                    VStack {
                         SearchBar(searchText: $searchText)
-                        TagsView(activateTag: $activateTag, tags: tags){ selectedTag in
+                        TagsView(activateTag: $activateTag, tags: tags) { selectedTag in
                             
-                            Task{
+                            Task {
                                 do {
                                     try await booksApi.getBooks(forTag: selectedTag)
-                                }catch {
+                                } catch {
                                     print("Error loading books for tag: \(selectedTag)")
                                 }
                             }
-                            
-                        }
-                        List() {
-                            
-                            ForEach(booksApi.books) { book in
-                                AsyncImage(url: URL(string: book.volumeInfo?.imageLinks?.smallThumbnail ?? ""), content: {image in
-                                    
-                                    HStack {
-                                        image
-                                            .resizable()
-                                            .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.18, alignment: .center)
-                                            .cornerRadius(10)
-                                        
-                                        VStack(alignment: .leading, spacing: 15) {
-                                            
-                                            Text(book.volumeInfo?.title ?? "")
-                                                .font(.title3)
-                                                .fontWeight(.semibold)
-                                            
-                                            if let authors = book.volumeInfo?.authors {
-                                                  Text("By " + authors.joined(separator: ", "))
-                                                    .font(.caption)
-                                                    .foregroundColor(.gray)
-                                              }
-                                              
-                                              if let categories = book.volumeInfo?.categories {
-                                                  Text("Categories: " + categories.joined(separator: ", "))
-                                                      .font(.caption)
-                                                      .foregroundColor(.gray)
-                                              }
-                                       }
-                                        
-                                    }
-                                    
-                                }, placeholder: {
-                                    ProgressView()
-                                })
-                            }
-                            
                         }
                         
-                    }  .task {
-                        do {
-                            try await booksApi.getBooks(forTag: activateTag)
-                        } catch APIErrors.invalidData {
-                            print("Invalid Data")
-                        } catch APIErrors.invalidURL {
-                            print("Invalid Url")
-                        } catch APIErrors.invalidResponse {
-                            print("Invalid Response")
-                        } catch {
-                            print("General error:\(error.localizedDescription)")
+                        List() {
+                            ForEach(booksApi.books) { book in
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 15) {
+                                        Text(book.volumeInfo?.title ?? "")
+                                            .font(.title3)
+                                            .fontWeight(.semibold)
+                                        
+                                        if let authors = book.volumeInfo?.authors {
+                                            Text("By " + authors.joined(separator: ", "))
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        
+                                        if let categories = book.volumeInfo?.categories {
+                                            Text("Categories: " + categories.joined(separator: ", "))
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                    }
+                                    .padding(20)
+                                    .frame(width: geometry.size.width / 2, height: geometry.size.height * 0.18)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                            .fill(.white)
+                                            .shadow(color: .black.opacity(0.08), radius: 8, x: 5, y: 5)
+                                            .shadow(color: .black.opacity(0.08), radius: 8, x: -5, y: -5)
+                                    }
+                                    .zIndex(1)
+                                    
+                                    if let smallThumbnail = book.volumeInfo?.imageLinks?.smallThumbnail,
+                                       let url = URL(string: smallThumbnail) {
+                                        AsyncImage(url: url, content: { image in
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.18, alignment: .center)
+                                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                                .shadow(color: .black.opacity(0.01), radius: 5, x: 5, y: 5)
+                                                .shadow(color: .black.opacity(0.01), radius: 5, x: -5, y: -5)
+                                        }, placeholder: {
+                                            ProgressView()
+                                        })
+                                    }
+                               
+                                }
+                                .onTapGesture {
+                                    withAnimation(.easeInOut(duration: 0.2)){
+                                        animateCurrentBook = true
+                                        selectedBook = book
+                                    }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15){
+                                        showDetailView = true
+                                    }
+                                }
+                            }
+                        }
+                        .task {
+                            do {
+                                try await booksApi.getBooks(forTag: activateTag)
+                            } catch APIErrors.invalidData {
+                                print("Invalid Data")
+                            } catch APIErrors.invalidURL {
+                                print("Invalid Url")
+                            } catch APIErrors.invalidResponse {
+                                print("Invalid Response")
+                            } catch {
+                                print("General error:\(error.localizedDescription)")
+                            }
                         }
                     }
-                    
+                    .frame(width: geometry.size.width, height: geometry.size.height)
                 }
-                 .frame(width: geometry.size.width, height: geometry.size.height)
-                
-            }
-        }
-    }
-    @ViewBuilder
-        func TagsView(activateTag: Binding<String>, tags: [String], onTagSelected: @escaping (String) -> Void) -> some View {
-            ScrollView(.horizontal, showsIndicators: false){
-                HStack(spacing: 10){
-                    ForEach(tags, id: \.self){ tag in
-                        Text(tag)
-                            .font(.caption)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 5)
-                            .background{
-                                if activateTag.wrappedValue == tag {
-                                    Capsule()
-                                        .fill(Color.orange)
-                                        .matchedGeometryEffect(id: "ACTIVETAB", in: animation)
-                                } else {
-                                    Capsule()
-                                        .fill(.gray.opacity(0.2))
-                                }
-                            }
-                            .foregroundColor(activateTag.wrappedValue == tag ? .black : .gray)
-                            .onTapGesture {
-                                withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.7, blendDuration: 0.7)){
-                                    activateTag.wrappedValue = tag
-                                    onTagSelected(tag)
-                                }
-                            }
+                .overlay {
+                    if let selectedBook, showDetailView {
+                        BookDetailView(db: db, booksApi: booksApi, show: $showDetailView, animation: animation, book: selectedBook)
+                        //for more fluent animation transition
+                            .transition(.asymmetric(insertion: .identity, removal: .offset(y:5)))
                     }
                 }
-                .padding(.horizontal, 15)
+                .onChange(of: showDetailView) { _, newValue in
+                    if !newValue {
+                        //resetting book animation
+                        withAnimation(.easeInOut(duration: 0.15).delay(0.4)){
+                            animateCurrentBook = false
+                        }
+                    }
+                }
             }
         }
     }
+    
+    @ViewBuilder
+    func TagsView(activateTag: Binding<String>, tags: [String], onTagSelected: @escaping (String) -> Void) -> some View {
+        ScrollView(.horizontal, showsIndicators: false){
+            HStack(spacing: 10){
+                ForEach(tags, id: \.self){ tag in
+                    Text(tag)
+                        .font(.caption)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 5)
+                        .background{
+                            if activateTag.wrappedValue == tag {
+                                Capsule()
+                                    .fill(Color.orange)
+                                    .matchedGeometryEffect(id: "ACTIVETAB", in: animation)
+                            } else {
+                                Capsule()
+                                    .fill(.gray.opacity(0.2))
+                            }
+                        }
+                        .foregroundColor(activateTag.wrappedValue == tag ? .black : .gray)
+                        .onTapGesture {
+                            withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.7, blendDuration: 0.7)){
+                                activateTag.wrappedValue = tag
+                                onTagSelected(tag)
+                            }
+                        }
+                }
+            }
+            .padding(.horizontal, 15)
+        }
+    }
+}
 #Preview {
     BooksView(db: DBConnection(), booksApi: BooksAPI())
 }

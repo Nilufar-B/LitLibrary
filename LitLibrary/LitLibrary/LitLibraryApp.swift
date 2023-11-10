@@ -22,14 +22,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct LitLibraryApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-//    @StateObject var dbConnection = DBConnection()
-//    @StateObject var booksAPI = BooksAPI()
     
     var body: some Scene {
         WindowGroup {
             NavigationStack {
                 ContentView()
-                //LoginView(db: dbConnection, booksApi: booksAPI)
             }
         }
     }

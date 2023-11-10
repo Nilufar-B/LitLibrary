@@ -26,7 +26,10 @@ struct SearchBar: View {
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
+                        .padding(.trailing, 10)
                 }
+                .opacity(searchText == "" ? 0 : 1)
+            
             }
             .padding(8)
             .background(Color(.systemGray6))

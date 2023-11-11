@@ -18,6 +18,18 @@ struct BooksView: View {
     @State private var showDetailView: Bool = false
     @State private var selectedBook: Book?
     @State private var animateCurrentBook: Bool = false
+    
+    var filteredBooks: [Book] {
+            if searchText.isEmpty {
+                return booksApi.books
+            } else {
+                return booksApi.books.filter { book in
+                    let titleMatch = book.volumeInfo?.title?.lowercased().contains(searchText.lowercased()) ?? false
+                    let authorMatch = (book.volumeInfo?.authors?.joined(separator: " ") ?? "").lowercased().contains(searchText.lowercased())
+                    return titleMatch || authorMatch
+                }
+            }
+        }
    
     var tags: [String] = [
         "Fiction",
@@ -52,7 +64,7 @@ struct BooksView: View {
                         }
                         
                         List() {
-                            ForEach(booksApi.books) { book in
+                            ForEach(filteredBooks) { book in
                                 HStack {
                                     VStack(alignment: .leading, spacing: 15) {
                                         Text(book.volumeInfo?.title ?? "")
@@ -87,7 +99,7 @@ struct BooksView: View {
                                         AsyncImage(url: url, content: { image in
                                             image
                                                 .resizable()
-                                                .aspectRatio(contentMode: .fill)
+                                                .aspectRatio(contentMode: .fit)
                                                 .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.25, alignment: .center)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                                                 .shadow(color: .black.opacity(0.01), radius: 5, x: 5, y: 5)

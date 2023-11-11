@@ -44,14 +44,16 @@ struct RegisterView:View {
                             VStack(spacing: 15) {
                                 TextField("Name", text:$name)
                                     .textInputAutocapitalization(.none)
+                                    .autocorrectionDisabled()
                                     .padding()
-                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.name != "" ? Color.indigo : self.color, lineWidth: 2))
+                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.name != "" ? Color.orange : self.color, lineWidth: 2))
                                 
                                 
                                 TextField("Email", text: $email)
                                     .textInputAutocapitalization(.none)
+                                    .autocorrectionDisabled()
                                     .padding()
-                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
+                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.orange : self.color, lineWidth: 2))
                                 
                                 
                                 HStack {
@@ -74,7 +76,7 @@ struct RegisterView:View {
                                     }
                                 }
                                 .padding()
-                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
+                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.orange : self.color,lineWidth: 2))
                                
                                 
                               ZStack(alignment: .trailing){
@@ -115,47 +117,49 @@ struct RegisterView:View {
                                }
                                 .padding()
                                 .background(RoundedRectangle(cornerRadius: 4).stroke(self.confirmPassword != "" ? Color.indigo : self.color,lineWidth: 2))
-                               
-                                
-                            }
-                            
-                            Button(action: {
-                                if !email.isEmpty && !password.isEmpty && password == confirmPassword {
-                                db.userExists(email: email) { exists in
-                                    DispatchQueue.main.async {
-                                        if exists {
-                                            showAlert = true
-                                            alertMessage = "User with this email already exists."
-                                                } else {
-                                            db.RegisterUser(name: name, email: email, password: password, confirmPassword: confirmPassword) { success in
-                                                    if success {
-                                                    isRegistrationSuccess = true
-                                                        } else {
-                                                        print("Failed to create")
-                                                    }
-                                               }
+                                Button(action: {
+                                    if !email.isEmpty && !password.isEmpty && password == confirmPassword {
+                                    db.userExists(email: email) { exists in
+                                        DispatchQueue.main.async {
+                                            if exists {
+                                                showAlert = true
+                                                alertMessage = "User with this email already exists."
+                                                    } else {
+                                                db.RegisterUser(name: name, email: email, password: password, confirmPassword: confirmPassword) { success in
+                                                        if success {
+                                                        isRegistrationSuccess = true
+                                                            } else {
+                                                            print("Failed to create")
+                                                        }
+                                                   }
+                                                }
                                             }
                                         }
                                     }
+                                }, label: {
+                                    Text("Register")
+                                    .foregroundColor(.white)
+                                    .padding(.vertical)
+                                    .frame(width: geometry.size.width * 0.9)
+                                })
+                                .background(Color.orange)
+                                .cornerRadius(10)
+                                .navigationDestination(isPresented: $isRegistrationSuccess, destination: {
+                                    LoginView(db: db, booksApi: booksApi)
+                                })
+                                .alert(isPresented: $showAlert) {
+                                    Alert(
+                                        title: Text("Registration Failed"),
+                                        message: Text(alertMessage),
+                                        dismissButton: .default(Text("OK"))
+                                    )
                                 }
-                            }, label: {
-                                Text("Register")
-                                .foregroundColor(.white)
-                                .padding(.vertical)
-                                .frame(width: geometry.size.width * 0.9)
-                            })
-                            .alert(isPresented: $showAlert) {
-                                Alert(
-                                    title: Text("Registration Failed"),
-                                    message: Text(alertMessage),
-                                    dismissButton: .default(Text("OK"))
-                                )
+                             
+                             
+                                
                             }
-                            .navigationDestination(isPresented: $isRegistrationSuccess, destination: {
-                                LoginView(db: db, booksApi: booksApi)
-                            })
-                            .background(Color.indigo)
-                            .cornerRadius(10)
+                            
+                            
                             
                         }
                         .padding(.horizontal, 25)

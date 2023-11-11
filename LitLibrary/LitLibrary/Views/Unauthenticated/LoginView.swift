@@ -31,7 +31,7 @@ struct LoginView: View {
                                     .bold()
                                     .foregroundColor(.gray)
                             })
-                            .padding()
+                        .padding()
                         
                         VStack {
                             
@@ -46,8 +46,9 @@ struct LoginView: View {
                             VStack(spacing: 15) {
                                 TextField("Email", text: $email)
                                     .textInputAutocapitalization(.none)
+                                    .autocorrectionDisabled()
                                     .padding()
-                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.indigo : self.color, lineWidth: 2))
+                                    .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.orange : self.color, lineWidth: 2))
                                 
                                 
                                 HStack {
@@ -70,7 +71,7 @@ struct LoginView: View {
                                     }
                                 }
                                 .padding()
-                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.indigo : self.color,lineWidth: 2))
+                                .background(RoundedRectangle(cornerRadius: 4).stroke(self.password != "" ? Color.orange : self.color,lineWidth: 2))
                                 
                             }
                             
@@ -94,36 +95,33 @@ struct LoginView: View {
                                 })
                             }
                             
-                Button(action: {
-                        if email.isEmpty || password.isEmpty {
-                            showAlert = true
-                            alertMessage = "Please fill in both email and password fields."
-                           } else {
-                           db.LoginUser(email: email, password: password) { success in
-                                if success {
-                                isLoggedIn = true
-                                    } else {
-                                    showAlert = true
-                                    alertMessage = "Failed to log Please check your credentials."
-                                    print("Failed to logging in!")
+                            Button(action: {
+                                            if email.isEmpty || password.isEmpty {
+                                                showAlert = true
+                                                alertMessage = "Please fill in both email and password fields."
+                                            } else {
+                                                db.LoginUser(email: email, password: password) { success in
+                                                    if success {
+                                                        isLoggedIn = true
+                                                    } else {
+                                                        showAlert = true
+                                                        alertMessage = "Failed to log in. Please check your credentials."
+                                                        print("Failed to logging in!")
+                                                    }
                                                 }
                                             }
+                                        }, label: {
+                                            Text("Log in")
+                                                .foregroundColor(.white)
+                                                .padding(.vertical)
+                                                .frame(width: geometry.size.width * 0.9)
+                                        })
+                                        .background(Color.orange)
+                                        .cornerRadius(10)
+                                        .padding(.top, 25)
+                                        .alert(isPresented: $showAlert) {
+                                            Alert(title: Text("Login Failed"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                                         }
-                            }, label: {
-                                Text("Log in")
-                                    .foregroundColor(.white)
-                                    .padding(.vertical)
-                                    .frame(width: geometry.size.width * 0.9)
-                            })
-                            .background(Color.indigo)
-                                    .cornerRadius(10)
-                                    .padding(.top, 25)
-                                    .alert(isPresented: $showAlert) {
-                                        Alert(title: Text("Login Failed"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                                    }
-                            .navigationDestination(isPresented: $isLoggedIn, destination: {
-                                BooksView(db: db, booksApi: booksApi)
-                            })
                             
                         }
                         .padding(.horizontal, 25)
@@ -131,6 +129,7 @@ struct LoginView: View {
                     
                 }
             }
+
 
 
 #Preview {

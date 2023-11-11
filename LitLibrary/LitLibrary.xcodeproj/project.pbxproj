@@ -35,6 +35,7 @@
 		A3DF556E2AF8FD5F00909E3C /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A3DF556D2AF8FD5F00909E3C /* FirebaseDatabase */; };
 		A3F32B8C2AFA401700FBF9CF /* BookDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F32B8B2AFA401700FBF9CF /* BookDetailView.swift */; };
 		A3F32BB22AFD205300FBF9CF /* CustomShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F32BB12AFD205300FBF9CF /* CustomShape.swift */; };
+		A3F32BB42AFFD13000FBF9CF /* SplaschView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F32BB32AFFD13000FBF9CF /* SplaschView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		A3F32B8A2AFA2E0F00FBF9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A3F32B8B2AFA401700FBF9CF /* BookDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDetailView.swift; sourceTree = "<group>"; };
 		A3F32BB12AFD205300FBF9CF /* CustomShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShape.swift; sourceTree = "<group>"; };
+		A3F32BB32AFFD13000FBF9CF /* SplaschView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplaschView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				A3DF55622AF2862B00909E3C /* Components */,
 				A3DF55612AF2860700909E3C /* Unauthenticated */,
 				A3DF55402AF12E4800909E3C /* Authenticated */,
+				A3F32BB32AFFD13000FBF9CF /* SplaschView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				A3DF551E2AF129FD00909E3C /* ContentView.swift in Sources */,
 				A3DF554F2AF17AA800909E3C /* SettingsView.swift in Sources */,
 				A3DF554B2AF164C000909E3C /* BooksView.swift in Sources */,
+				A3F32BB42AFFD13000FBF9CF /* SplaschView.swift in Sources */,
 				A3F32BB22AFD205300FBF9CF /* CustomShape.swift in Sources */,
 				A3DF55442AF12F3400909E3C /* RegisterView.swift in Sources */,
 				A3F32B8C2AFA401700FBF9CF /* BookDetailView.swift in Sources */,

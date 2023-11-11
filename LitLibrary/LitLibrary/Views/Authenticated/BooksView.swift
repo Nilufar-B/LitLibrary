@@ -18,7 +18,7 @@ struct BooksView: View {
     @State private var showDetailView: Bool = false
     @State private var selectedBook: Book?
     @State private var animateCurrentBook: Bool = false
-    
+   
     var tags: [String] = [
         "Fiction",
         "Adventure",
@@ -34,7 +34,7 @@ struct BooksView: View {
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
-                
+              
                 VStack {
                     LogoView()
                     
@@ -72,7 +72,7 @@ struct BooksView: View {
                                         }
                                     }
                                     .padding(20)
-                                    .frame(width: geometry.size.width / 2, height: geometry.size.height * 0.18)
+                                    .frame(width: geometry.size.width / 2, height: geometry.size.height * 0.2)
                                     .background {
                                         RoundedRectangle(cornerRadius: 10, style: .continuous)
                                             .fill(.white)
@@ -80,6 +80,7 @@ struct BooksView: View {
                                             .shadow(color: .black.opacity(0.08), radius: 8, x: -5, y: -5)
                                     }
                                     .zIndex(1)
+                                    .offset(x: animateCurrentBook && selectedBook?.id == book.id ? -20 : 0)
                                     
                                     if let smallThumbnail = book.volumeInfo?.imageLinks?.smallThumbnail,
                                        let url = URL(string: smallThumbnail) {
@@ -87,7 +88,7 @@ struct BooksView: View {
                                             image
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fill)
-                                                .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.18, alignment: .center)
+                                                .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.25, alignment: .center)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                                                 .shadow(color: .black.opacity(0.01), radius: 5, x: 5, y: 5)
                                                 .shadow(color: .black.opacity(0.01), radius: 5, x: -5, y: -5)

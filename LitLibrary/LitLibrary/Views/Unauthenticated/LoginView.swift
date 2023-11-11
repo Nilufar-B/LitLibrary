@@ -24,20 +24,15 @@ struct LoginView: View {
        @State private var alertMessage = ""
       
     var body: some View {
-        ZStack{
-            
-            ZStack(alignment: .topTrailing){
-                NavigationStack{
                 GeometryReader{ geometry in
-                    
-                    NavigationLink(destination: RegisterView(db: db, booksApi: booksApi)
-                        .navigationBarBackButtonHidden(true), label: {
-                            Text("Register")
-                                .bold()
-                                .foregroundColor(.gray)
-                        })
-                    .padding()
-                  
+                        NavigationLink(destination: RegisterView(db: db, booksApi: booksApi)
+                            .navigationBarBackButtonHidden(true), label: {
+                                Text("Register")
+                                    .bold()
+                                    .foregroundColor(.gray)
+                            })
+                            .padding()
+                        
                         VStack {
                             
                             Image("login")
@@ -99,44 +94,44 @@ struct LoginView: View {
                                 })
                             }
                             
-                            Button(action: {
-                                
-                                if !email.isEmpty && !password.isEmpty {
-
-                                    db.LoginUser(email: email, password: password){ success in
-                                        
-                                        if success{
-                                            isLoggedIn = true
-                                        }else {
-                                            print("Failed to logging in!")
+                Button(action: {
+                        if email.isEmpty || password.isEmpty {
+                            showAlert = true
+                            alertMessage = "Please fill in both email and password fields."
+                           } else {
+                           db.LoginUser(email: email, password: password) { success in
+                                if success {
+                                isLoggedIn = true
+                                    } else {
+                                    showAlert = true
+                                    alertMessage = "Failed to log Please check your credentials."
+                                    print("Failed to logging in!")
+                                                }
+                                            }
                                         }
-                                    
-                                    }
-                                }
                             }, label: {
                                 Text("Log in")
                                     .foregroundColor(.white)
                                     .padding(.vertical)
                                     .frame(width: geometry.size.width * 0.9)
                             })
+                            .background(Color.indigo)
+                                    .cornerRadius(10)
+                                    .padding(.top, 25)
+                                    .alert(isPresented: $showAlert) {
+                                        Alert(title: Text("Login Failed"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                                    }
                             .navigationDestination(isPresented: $isLoggedIn, destination: {
                                 BooksView(db: db, booksApi: booksApi)
                             })
-                            .background(Color.indigo)
-                            //                            .disabled(!formIsValid)
-                            //                            .opacity(formIsValid ? 1.0 : 0.5)
-                            .cornerRadius(10)
-                            .padding(.top, 25)
-                           
+                            
                         }
                         .padding(.horizontal, 25)
                     }
-                
+                    
                 }
             }
-        }
-    }
-}
+
 
 #Preview {
     LoginView(db: DBConnection(), booksApi: BooksAPI())

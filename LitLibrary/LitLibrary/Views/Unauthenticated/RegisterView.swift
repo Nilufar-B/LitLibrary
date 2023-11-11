@@ -28,10 +28,6 @@ struct RegisterView:View {
     @State private var alertMessage = ""
     
     var body: some View {
-        ZStack{
-            
-            ZStack(alignment: .topTrailing){
-                NavigationStack{
                     GeometryReader{ geometry in
                         VStack {
                             
@@ -155,6 +151,9 @@ struct RegisterView:View {
                                     dismissButton: .default(Text("OK"))
                                 )
                             }
+                            .navigationDestination(isPresented: $isRegistrationSuccess, destination: {
+                                LoginView(db: db, booksApi: booksApi)
+                            })
                             .background(Color.indigo)
                             .cornerRadius(10)
                             
@@ -174,10 +173,8 @@ struct RegisterView:View {
                     .padding()
                 }
             }
-        }
-    }
     
-}
+
 
 //extension RegisterView: AuthenticationFormProtocol{
 //    var formIsValid: Bool {

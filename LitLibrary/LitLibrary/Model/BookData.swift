@@ -20,7 +20,6 @@ struct VolumeInfo: Codable {
     var description: String?
     var imageLinks: ImageLinks?
     let canonicalVolumeLink: String?
-
 }
 
 struct ImageLinks : Codable {

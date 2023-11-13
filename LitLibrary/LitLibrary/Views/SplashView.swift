@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-struct SplaschView: View {
+
+
+struct SplashView: View {
     
     @State var isActive = false
     @State var size = 0.7
@@ -39,8 +41,6 @@ struct SplaschView: View {
                             self.size = 1.1
                             self.opacity = 1.0
                         }
-                    }
-                    .onAppear{
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0){
                             withAnimation{
                                 self.isActive = true
@@ -56,5 +56,5 @@ struct SplaschView: View {
 }
 
 #Preview {
-    SplaschView()
+    SplashView()
 }

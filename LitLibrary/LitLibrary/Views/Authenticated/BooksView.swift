@@ -44,9 +44,8 @@ struct BooksView: View {
     ]
     
     var body: some View {
-        NavigationStack {
             GeometryReader { geometry in
-              
+
                 VStack {
                     LogoView()
                     
@@ -99,7 +98,7 @@ struct BooksView: View {
                                         AsyncImage(url: url, content: { image in
                                             image
                                                 .resizable()
-                                                .aspectRatio(contentMode: .fit)
+                                                .aspectRatio(contentMode: .fill)
                                                 .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.25, alignment: .center)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                                                 .shadow(color: .black.opacity(0.01), radius: 5, x: 5, y: 5)
@@ -154,7 +153,7 @@ struct BooksView: View {
                 }
             }
         }
-    }
+    
     
     @ViewBuilder
     func TagsView(activateTag: Binding<String>, tags: [String], onTagSelected: @escaping (String) -> Void) -> some View {

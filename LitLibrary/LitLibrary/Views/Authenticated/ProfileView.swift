@@ -105,8 +105,10 @@ struct ProfileView: View {
                             }
                         }
                     }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
                 }
             }
+            
         }
     }
 }

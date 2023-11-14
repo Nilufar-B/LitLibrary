@@ -15,9 +15,9 @@ struct BooksView: View {
     @State private var searchText = ""
     @State private var activateTag = "Fiction"
     @Namespace private var animation
-    @State private var showDetailView: Bool = false
+    @State private var showDetailView = false
     @State private var selectedBook: Book?
-    @State private var animateCurrentBook: Bool = false
+    @State private var animateCurrentBook = false
     
     var filteredBooks: [Book] {
             if searchText.isEmpty {
@@ -137,20 +137,20 @@ struct BooksView: View {
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 }
                 .overlay {
-                    if let selectedBook, showDetailView {
-                        BookDetailView(db: db, booksApi: booksApi, show: $showDetailView, animation: animation, book: selectedBook)
+                    if let selectedBook {
+                        BookDetailView(db: db, booksApi: booksApi, show: $selectedBook, animation: animation, book: selectedBook)
                         //for more fluent animation transition
                             .transition(.asymmetric(insertion: .identity, removal: .offset(y:5)))
                     }
                 }
-                .onChange(of: showDetailView) { _, newValue in
-                    if !newValue {
-                        //resetting book animation
-                        withAnimation(.easeInOut(duration: 0.15).delay(0.4)){
-                            animateCurrentBook = false
-                        }
-                    }
-                }
+//                .onChange(of: showDetailView) { _, newValue in
+//                    if !newValue {
+//                        //resetting book animation
+//                        withAnimation(.easeInOut(duration: 0.15).delay(0.4)){
+//                            animateCurrentBook = false
+//                        }
+//                    }
+//                }
             }
         }
     

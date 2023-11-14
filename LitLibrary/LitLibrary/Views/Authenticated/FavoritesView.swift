@@ -11,26 +11,47 @@ struct FavoritesView: View {
     @ObservedObject var db: DBConnection
     @ObservedObject var booksApi: BooksAPI
     
+    @State private var selectedBook: Book?
+    @State private var animateCurrentBook = false
+    @Namespace private var animation
+    
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                LogoView()
-           
-                
-                List {
-                    ForEach(db.favoriteBooks, id: \.self) { bookId in
-                        if let book = booksApi.books.first(where: { $0.id == bookId }) {
-                            // Display each favorite book using your desired UI components
+            NavigationStack{
+                VStack {
+                    LogoView()
+                    
+                    
+                    Text("Favorite books")
+                        .bold()
+                        .font(.title3)
+                    
+                    List {
+                        ForEach(booksApi.books.filter { db.favoriteBooks.contains($0.id) }) { book in
+                            // Display each favorite book using BookRowView
                             BookRowView(book: book, geometry: geometry)
+                                .onTapGesture {
+                                    withAnimation(.easeInOut(duration: 0.2)){
+                                        animateCurrentBook = true
+                                        selectedBook = book
+                                        
+                                    }
+  
+                                }
                         }
                     }
                 }
-                .navigationTitle("Favorites")
             }
             .onAppear {
                 // Fetch favorite books when the view appears
                 db.fetchFavoriteBooks()
             }
+            .sheet(isPresented: .constant(selectedBook != nil)) {
+                            // Present the BookDetailView as a sheet when showDetailView is true
+                            if let selectedBook = selectedBook {
+                                BookDetailView(db: db, booksApi: booksApi, show: $selectedBook, animation: animation, book: selectedBook)
+                            }
+                        }
         }
     }
     

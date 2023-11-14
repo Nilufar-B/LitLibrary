@@ -19,7 +19,7 @@ struct VolumeInfo: Codable {
     var categories: [String]?
     var description: String?
     var imageLinks: ImageLinks?
-    let canonicalVolumeLink: String?
+    let previewLink: String?
 }
 
 struct ImageLinks : Codable {

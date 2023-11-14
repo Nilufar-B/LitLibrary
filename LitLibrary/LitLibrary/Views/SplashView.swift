@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct SplashView: View {
     
     @State var isActive = false

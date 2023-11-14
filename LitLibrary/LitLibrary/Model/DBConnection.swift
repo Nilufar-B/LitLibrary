@@ -17,7 +17,7 @@ class DBConnection: ObservableObject {
     
    @Published var currentUser: User?
    @Published var name: String?
-    @Published var favoriteBooks: [String] = []
+   @Published var favoriteBooks: [String] = []
 
     
     init() {
@@ -26,13 +26,11 @@ class DBConnection: ObservableObject {
             if let user = user {
                 
                 print("A user has logged in with email: \(user.email ?? "No email")")
-                
                 self.currentUser = user
   
             } else {
                 
                 self.currentUser = nil
-                
                 print("User has logged out")
             }
         }
@@ -97,32 +95,42 @@ class DBConnection: ObservableObject {
         completion(success)
     }
 
-
-
     func deleteAccount(completion: @escaping (Bool) -> Void) {
         if let user = auth.currentUser {
             let uid = user.uid
             print("User UID: \(uid)")
             
-            // remove document of collection "users"
-            db.collection("users").document(uid).delete { error in
+            // Reference to the user's favorites document
+            let userFavoritesRef = db.collection("users").document(uid).collection("favorites").document("favoritesDocument")
+            
+            userFavoritesRef.delete { error in
                 if let error = error {
-                    print("Error deleting user document: \(error.localizedDescription)")
+                    print("Error deleting user favorites document: \(error.localizedDescription)")
                     completion(false)
                 } else {
-                    user.delete { error in
+                    print("User favorites document deleted successfully")
+                    
+                    // Now, remove the user document
+                    self.db.collection("users").document(uid).delete { error in
                         if let error = error {
-                            print("Error deleting account: \(error.localizedDescription)")
+                            print("Error deleting user document: \(error.localizedDescription)")
                             completion(false)
                         } else {
-                            do {
-                                try self.auth.signOut()
-                                self.currentUser = nil
-                                print("Account deleted and user signed out successfully")
-                                completion(true)
-                            } catch let signOutError as NSError {
-                                print("Error signing out: \(signOutError.localizedDescription)")
-                                completion(false)
+                            user.delete { error in
+                                if let error = error {
+                                    print("Error deleting account: \(error.localizedDescription)")
+                                    completion(false)
+                                } else {
+                                    do {
+                                        try self.auth.signOut()
+                                        self.currentUser = nil
+                                        print("Account deleted and user signed out successfully")
+                                        completion(true)
+                                    } catch let signOutError as NSError {
+                                        print("Error signing out: \(signOutError.localizedDescription)")
+                                        completion(false)
+                                    }
+                                }
                             }
                         }
                     }
@@ -168,33 +176,76 @@ class DBConnection: ObservableObject {
     
     
     func addFavoriteBook(bookId: String) {
-            if let uid = currentUser?.uid {
-                // Update the path to include the user's UID
-                db.collection("users").document(uid).collection("favorites").addDocument(data: ["bookId": bookId])
+        if let uid = currentUser?.uid {
+            let userFavoritesRef = db.collection("users").document(uid).collection("favorites")
+            
+            // Check if the user already has a document
+            userFavoritesRef.document("favoritesDocument").getDocument { (document, error) in
+                if let document = document, document.exists {
+                    // Document exists, update the array
+                    userFavoritesRef.document("favoritesDocument").updateData([
+                        "bookIds": FieldValue.arrayUnion([bookId])
+                    ])
+                } else {
+                    // Document doesn't exist, create a new one with the array
+                    userFavoritesRef.document("favoritesDocument").setData([
+                        "bookIds": [bookId]
+                    ])
+                }
             }
         }
+    }
 
-        func getFavoriteBooks(completion: @escaping ([String]) -> Void) {
-            if let uid = currentUser?.uid {
-                // Update the path to include the user's UID
-                db.collection("users").document(uid).collection("favorites").getDocuments { snapshot, error in
-                    if let documents = snapshot?.documents {
-                        let favoriteBooks = documents.compactMap { $0["bookId"] as? String }
-                        completion(favoriteBooks)
+    func getFavoriteBooks(completion: @escaping ([String]) -> Void) {
+        if let uid = currentUser?.uid {
+            let userFavoritesRef = db.collection("users").document(uid).collection("favorites").document("favoritesDocument")
+            
+            userFavoritesRef.getDocument { (document, error) in
+                if let document = document, document.exists {
+                    // Document exists, retrieve the array
+                    if let bookIds = document["bookIds"] as? [String] {
+                        completion(bookIds)
                     } else {
                         completion([])
                     }
+                } else {
+                    // Document doesn't exist, user has no favorite books
+                    completion([])
                 }
-            } else {
-                completion([])
             }
+        } else {
+            completion([])
         }
+    }
 
     func fetchFavoriteBooks() {
-            getFavoriteBooks { favoriteBooks in
-                self.favoriteBooks = favoriteBooks
+        getFavoriteBooks { favoriteBooks in
+            self.favoriteBooks = favoriteBooks
+        }
+    }
+    
+    func isBookInFavorites(bookId: String) -> Bool {
+        return favoriteBooks.contains(bookId)
+    }
+    
+    func updateFavoriteBooks() {
+        if let uid = currentUser?.uid {
+            let userFavoritesRef = db.collection("users").document(uid).collection("favorites").document("favoritesDocument")
+            
+            // Updating the array in favorites in the database
+            userFavoritesRef.updateData([
+                "bookIds": favoriteBooks
+            ]) { error in
+                if let error = error {
+                    print("Error updating favorite books: \(error.localizedDescription)")
+                } else {
+                    print("Favorite books updated successfully")
+                }
             }
         }
+    }
+
+    
 
 
 }

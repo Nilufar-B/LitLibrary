@@ -13,7 +13,7 @@ struct LogoView: View {
 
             VStack(alignment: .leading){
                 HStack{
-                    Image("appLogo")
+                    Image("app")
                         .resizable()
                         .frame(width: 50, height: 50)
                         //.frame(width: geometry.size.width * 0.13, height: geometry.size.height * 0.07, alignment: .leading)

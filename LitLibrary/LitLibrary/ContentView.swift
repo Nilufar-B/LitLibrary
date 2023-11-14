@@ -13,15 +13,11 @@ struct ContentView: View {
   @StateObject var booksAPI = BooksAPI()
   @State private var isUserLoggedIn = false
     
-//    @ObservedObject var dbConnection: DBConnection
-//    @ObservedObject var booksAPI: BooksAPI
     
     var body: some View {
-   
-                if let _ = dbConnection.currentUser{
-                    NavigationStack{
-                        TabView {
-                            BooksView(db: dbConnection, booksApi: booksAPI)
+            if let _ = dbConnection.currentUser{
+                    TabView {
+                        BooksView(db: dbConnection, booksApi: booksAPI)
                                 .tabItem {
                                     Image(systemName: "house")
                                         .renderingMode(.template)
@@ -37,18 +33,12 @@ struct ContentView: View {
                                         .renderingMode(.template)
                                 }
                         }
-                    }
-           .accentColor(.orange)
-        
-                } else {
-                    NavigationStack{
-                        LoginView(db: dbConnection, booksApi: booksAPI)
-                    }
-                }
-        
-   
-    }
-    
+                
+                .accentColor(.orange)
+            } else {
+                LoginView(db: dbConnection, booksApi: booksAPI)
+            }
+        }
 }
 
 #Preview {

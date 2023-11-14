@@ -13,26 +13,29 @@ struct BookDetailView: View {
     @ObservedObject var db: DBConnection
     @ObservedObject var booksApi: BooksAPI
     
-    @Binding var show: Bool
+    @Binding var show: Book?
     var animation: Namespace.ID
     var book: Book
-    @State private var animationContent: Bool = false
-    @State private var offsetAnimation: Bool = false
-    @State private var isFavorite: Bool = false
+    @State private var animationContent = false
+    @State private var offsetAnimation = false
+    @State private var isFavorite = false
+    
+    
     
     var body: some View {
         GeometryReader{ geometry in
             VStack{
+                
                 LogoView()
                 
-                VStack(spacing: 15) {
+                VStack {
                     Button(action: {
-                        withAnimation(.easeInOut(duration: 0.2)){
+                        withAnimation(.easeInOut(duration: 0.3)){
                             offsetAnimation = false
                         }
-                        withAnimation(.easeInOut(duration: 0.2)){
+                        withAnimation(.easeInOut(duration: 0.3)){
                             animationContent = false
-                            show = false
+                            show = nil
                         }
                         
                     }, label: {
@@ -42,11 +45,10 @@ struct BookDetailView: View {
                             .foregroundColor(.black)
                             .contentShape(Rectangle())
                     })
-                    .padding([.leading, .vertical], 15)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .opacity(animationContent ? 1 : 0)
+                   // .padding()
+                   // .opacity(animationContent ? 1 : 0)
                     
-                    //book preview with matched geometry effect
                     GeometryReader {
                         let size = $0.size
                         
@@ -57,7 +59,7 @@ struct BookDetailView: View {
                                     if case .success(let image) = phase {
                                         image
                                             .resizable()
-                                            .aspectRatio(contentMode: .fill)
+                                            .aspectRatio(contentMode: .fit)
                                             .frame(width: (size.width - 30) / 2, height: size.height)
                                             .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
                                             .matchedGeometryEffect(id: book.id, in: animation)
@@ -89,20 +91,36 @@ struct BookDetailView: View {
                                 Text("By " + (book.volumeInfo?.authors?.joined(separator: ", ") ?? ""))
                                     .font(.callout)
                                     .foregroundColor(.gray)
-                                
-                                Button(action: {
-                                    toggleFavorite()
-                                }, label: {
-                                    Label("Favorite", systemImage: isFavorite ? "suit.heart.fill" : "suit.heart")
-                                        .font(.callout)
-                                        .foregroundColor(isFavorite ? .red : .gray)
-                                })
-                                .frame(maxWidth: .infinity)
-                                .padding(.top, 20)
+                                VStack(spacing: 10){
+                                    Button(action: {
+                                        toggleFavorite()
+                                    }, label: {
+                                        Label("Favorite", systemImage: isFavorite ? "suit.heart.fill" : "suit.heart")
+                                            .font(.callout)
+                                            .foregroundColor(isFavorite ? .red : .gray)
+                                    })
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.top, 20)
+                                    Button(action: {
+                                        if let previewLink = book.volumeInfo?.previewLink, let url = URL(string: previewLink) {
+                                            UIApplication.shared.open(url)
+                                        }
+                                    }, label: {
+                                        Label("Read now", systemImage: "book")
+                                            .font(.callout)
+                                            .foregroundColor(.gray)
+                                    })
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.bottom, 15)
+                                }
                             }
                             .padding(.trailing, 15)
                             .padding(.top, 30)
                         }
+                        .onAppear {
+                            // Set isFavorite based on whether the book is in favorites
+                            isFavorite = db.isBookInFavorites(bookId: book.id)
+                            }
                     }
                     .frame(height: 220)
                     //placing above
@@ -118,8 +136,11 @@ struct BookDetailView: View {
                         .padding(.top, -180)
                         .zIndex(0)
                         .opacity(animationContent ? 1 : 0)
+
+                                    
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding()
                 .background{
                     Rectangle()
                         .fill(.white)
@@ -141,11 +162,23 @@ struct BookDetailView: View {
     }
     
     func toggleFavorite() {
-        isFavorite.toggle()
         if isFavorite {
-            db.addFavoriteBook(bookId: book.id)
+            // If the book is already in favorites, we will remove it from there
+            if let index = db.favoriteBooks.firstIndex(of: book.id) {
+                db.favoriteBooks.remove(at: index)
+            }
+        } else {
+            // If a book is not in your favorites, add it there
+            db.favoriteBooks.append(book.id)
         }
+        
+        // Update the isFavorite state
+        isFavorite.toggle()
+        
+        // Saving changes to the database
+        db.updateFavoriteBooks()
     }
+
     
     @ViewBuilder
     func BookDetails() -> some View {
@@ -157,7 +190,6 @@ struct BookDetailView: View {
                 VStack(spacing: 15) {
                     Text("About the book")
                         .font(.title3)
-                        .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     Text(book.volumeInfo?.description ?? "")
@@ -167,21 +199,8 @@ struct BookDetailView: View {
                 .padding(.bottom, 15)
                 .padding(.top, 20)
             }
-            Button(action: {
-                
-            }, label: {
-                Text("Read Now")
-                    .font(.callout)
-                    .fontWeight(.semibold)
-                    .padding(.horizontal, 45)
-                    .padding(.vertical, 10)
-//                    .background{
-//                        Capsule()
-//                            .fill(Color.orange.gradient)
-//                    }
-                    .foregroundColor(.orange)
-            })
-            .padding(.bottom, 15)
+
+
         }
         .padding(.top, 120)
         .padding([.horizontal, .top], 15)

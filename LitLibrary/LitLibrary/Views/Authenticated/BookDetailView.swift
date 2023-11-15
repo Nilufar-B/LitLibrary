@@ -85,7 +85,7 @@ struct BookDetailView: View {
                             //book details
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(book.volumeInfo?.title ?? "Unknown")
-                                    .font(.title3)
+                                    .font(.callout)
                                     .fontWeight(.semibold)
                                 
                                 Text("By " + (book.volumeInfo?.authors?.joined(separator: ", ") ?? ""))
@@ -192,11 +192,11 @@ struct BookDetailView: View {
                         .font(.title3)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Text(book.volumeInfo?.description ?? "")
+                    Text(book.volumeInfo?.description ?? "No description")
                         .font(.callout)
                         .foregroundColor(.gray)
                 }
-                .padding(.bottom, 15)
+                .padding(.bottom, 50)
                 .padding(.top, 20)
             }
 

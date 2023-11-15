@@ -28,8 +28,8 @@ struct ProfileView: View {
                     List{
                         Section{
                             HStack {
-                                Text("JD")
-                                    .font(.title)
+                                Text("Image")
+                                    .font(.caption)
                                     .fontWeight(.semibold)
                                     .foregroundColor(.white)
                                     .frame(width: 72, height: 72)

@@ -1,2 +1,2 @@
 # LitLibrary
-https://github.com/Nilufar-B/LitLibrary/blob/main/LitLibrary.png
+![alt LitLibrary is a user-friendly application designed to enhance your reading experience by providing seamless access to a vast collection of books using the Google Books API. Whether you're an avid reader or someone looking for your next literary adventure, LitLibrary is here to cater to all your book-related needs.](https://github.com/Nilufar-B/LitLibrary/blob/main/LitLibrary.png)

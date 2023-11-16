@@ -51,7 +51,7 @@ struct RegisterView:View {
                         
                         
                         TextField("Email", text: $email)
-                            .textInputAutocapitalization(.none)
+                            .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.orange : self.color, lineWidth: 2))

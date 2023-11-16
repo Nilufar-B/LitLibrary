@@ -38,7 +38,7 @@ struct LoginView: View {
                     
                     VStack(spacing: 15) {
                         TextField("Email", text: $email)
-                            .textInputAutocapitalization(.none)
+                            .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 4).stroke(self.email != "" ? Color.orange : self.color, lineWidth: 2))
@@ -75,7 +75,6 @@ struct LoginView: View {
                             if !email.isEmpty {
                                 
                                 db.resetPassword(email: email){ success in
-                                    
                                     if !success {
                                         print("Failed to reset password!")
                                     }

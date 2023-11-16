@@ -84,7 +84,7 @@ class DBConnection: ObservableObject {
 
         do {
             try auth.signOut()
-            self.currentUser = nil 
+            self.currentUser = nil
             success = true
             print("User signed out successfully")
         } catch let error as NSError {
@@ -197,26 +197,24 @@ class DBConnection: ObservableObject {
     }
 
     func getFavoriteBooks(completion: @escaping ([String]) -> Void) {
-        if let uid = currentUser?.uid {
-            let userFavoritesRef = db.collection("users").document(uid).collection("favorites").document("favoritesDocument")
-            
-            userFavoritesRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    // Document exists, retrieve the array
-                    if let bookIds = document["bookIds"] as? [String] {
-                        completion(bookIds)
-                    } else {
-                        completion([])
-                    }
-                } else {
-                    // Document doesn't exist, user has no favorite books
-                    completion([])
-                }
-            }
-        } else {
+        guard let uid = currentUser?.uid else {
             completion([])
+            return
+        }
+
+        let userFavoritesRef = db.collection("users").document(uid).collection("favorites").document("favoritesDocument")
+
+        userFavoritesRef.getDocument { (document, error) in
+            if let document = document, document.exists, let bookIds = document["bookIds"] as? [String] {
+                // Document exists, retrieve the array
+                completion(bookIds)
+            } else {
+                // Document doesn't exist or bookIds is not a valid array, user has no favorite books
+                completion([])
+            }
         }
     }
+
 
     func fetchFavoriteBooks() {
         getFavoriteBooks { favoriteBooks in
@@ -232,21 +230,37 @@ class DBConnection: ObservableObject {
         if let uid = currentUser?.uid {
             let userFavoritesRef = db.collection("users").document(uid).collection("favorites").document("favoritesDocument")
             
-            // Updating the array in favorites in the database
-            userFavoritesRef.updateData([
-                "bookIds": favoriteBooks
-            ]) { error in
-                if let error = error {
-                    print("Error updating favorite books: \(error.localizedDescription)")
+            // Check if the document exists
+            userFavoritesRef.getDocument { (document, error) in
+                if let document = document, document.exists {
+                    // Document exists, update the array
+                    userFavoritesRef.updateData([
+                        "bookIds": self.favoriteBooks
+                    ]) { error in
+                        if let error = error {
+                            print("Error updating favorite books: \(error.localizedDescription)")
+                        } else {
+                            print("Favorite books updated successfully")
+                        }
+                    }
                 } else {
-                    print("Favorite books updated successfully")
+                    // Document doesn't exist, create a new one with the array
+                    userFavoritesRef.setData([
+                        "bookIds": self.favoriteBooks
+                    ]) { error in
+                        if let error = error {
+                            print("Error creating favorite books document: \(error.localizedDescription)")
+                        } else {
+                            print("Favorite books document created successfully")
+                        }
+                    }
                 }
             }
         }
     }
 
+
     
 
 
 }
-

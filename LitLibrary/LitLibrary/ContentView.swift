@@ -11,7 +11,6 @@ struct ContentView: View {
     
   @StateObject var dbConnection = DBConnection()
   @StateObject var booksAPI = BooksAPI()
-  @State private var isUserLoggedIn = false
     
     
     var body: some View {
